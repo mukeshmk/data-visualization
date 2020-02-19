@@ -1,9 +1,13 @@
+rotate = 0
+clicked = 0
+
 def setup():
     size(1800, 900)
     background(0, 0, 0)
 
 def draw():
     i = 0
+    deg = float(rotate)*radians(30)
     background(0, 0, 0)
     table = loadTable("nightingale-rose.csv", "header")
     for row in table.rows():
@@ -20,9 +24,22 @@ def draw():
         if i < 12:
             # scale down the value
             disr = disr/200
-            arc(500, 500, disr*(100), disr*(100),  float(i)*radians(30), float(i+1)*radians(30))
+            arc(500, 500, disr*(clicked*100 + 100), disr*(clicked*100 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30))
         else:
             j = i - 12
             # scale down the value
             disr = disr/100
-            arc(1300, 500, disr*(100), disr*(100),  float(j)*radians(30), float(j+1)*radians(30))
+            arc(1300, 500, disr*(clicked*100 + 100), disr*(clicked*100 + 100),  deg + float(j)*radians(30), deg + float(j+1)*radians(30))
+        
+def mouseWheel(event):
+    global rotate 
+    rotate += event.getCount()
+    # keep value in range
+    rotate = rotate % 12
+    
+def mouseClicked(): 
+    global clicked
+    if clicked == 0:
+        clicked = 1
+    else:
+        clicked = 0
