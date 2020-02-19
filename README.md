@@ -1,2 +1,4 @@
 # data-visualization
-data visualization using py.processing
+Data Visualization using py.processing
+
+1. Jhon Snow's - Cholera Outbreak
