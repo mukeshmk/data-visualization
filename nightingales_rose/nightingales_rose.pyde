@@ -5,16 +5,21 @@ y1 = 500
 x2 = 350
 y2 = 350
 
+textx = 200
+texty = 700
+
 def setup():
-    size(1920, 1080)
+    fullScreen()
+    #size(1920, 1080)
     background(0, 0, 0)
 
+# https://coolors.co/748291-c0c0c0-eff5f7-ffffff-1b6cd6
 def draw():
     vd = vi = vo = True
     i = 0
     deg = float(spin)*radians(30)
     strokeWeight(2.0)
-    background(0, 0, 0)
+    background('#748291')
     table = loadTable("nightingale-rose.csv", "header")
 
     if keyPressed:
@@ -69,16 +74,17 @@ def draw():
             text(mny, 0, 0)
             popMatrix()
 
+            stroke(0)
             # diseases
-            fill(180, 190, 190)
+            fill('#1B6CD6')
             if vd:
                 arc(x1, y1, disr*(zoom*100 + 100), disr*(zoom*90 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30), PIE)
             # injuries
-            fill(230, 180, 170)
+            fill('#c0c0c0')
             if vi:
                 arc(x1, y1, injr*(zoom*100 + 100), injr*(zoom*90 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30), PIE)
             # other causes
-            fill(100, 80, 80)
+            fill('#eff5f7')
             if vo:
                 arc(x1, y1, othr*(zoom*100 + 100), othr*(zoom*90 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30), PIE)
         else:
@@ -109,30 +115,32 @@ def draw():
             text(mny, 0, 0)
             popMatrix()
 
+            stroke(0)
             # diseases
-            fill(180, 190, 190)
+            fill('#1B6CD6')
             if vd:
                 arc(x2, y2, disr*(zoom*100 + 100), disr*(zoom*100 + 100),  deg + float(i-12)*radians(30), deg + float(i-11)*radians(30), PIE)
             # injuries
-            fill(230, 180, 170)
+            fill('#c0c0c0')
             if vi:
                 arc(x2, y2, injr*(zoom*100 + 100), injr*(zoom*100 + 100),  deg + float(i-12)*radians(30), deg + float(i-11)*radians(30), PIE)
             # other causes
-            fill(100, 80, 80)
+            fill('#eff5f7')
             if vo:
                 arc(x2, y2, othr*(zoom*100 + 100), othr*(zoom*100 + 100),  deg + float(i-12)*radians(30), deg + float(i-11)*radians(30), PIE)
         i = i + 1
         
         textAlign(LEFT, LEFT)
-        fill(255)
         textSize(30.0)
-        text("Nightingale's Rose", 200, 700)
+        fill('#453BF9')
+        text("Nightingale's Rose", textx, texty)
         textSize(20.0)
-        text("Scroll with the mouse wheel to rotate ",200, 735)
-        text("Click for zoom-in and out", 200, 760)
-        text("Hold 'd' to see mortality rate due to Zymotic diseases", 200, 785)
-        text("Hold 'i' to see mortality rate due to Wounds & injuries", 200, 810)
-        text("Hold 'o' to see mortality rate due to All other causes", 200, 835)
+        fill('#00E3EF')
+        text("Scroll with the mouse wheel to rotate ",textx, texty+30)
+        text("Click for zoom-in and out", textx, texty+60)
+        text("Hold 'd' to see mortality rate due to Zymotic diseases", textx, texty+90)
+        text("Hold 'i' to see mortality rate due to Wounds & injuries", textx, texty+120)
+        text("Hold 'o' to see mortality rate due to All other causes", textx, texty+150)
         textSize(12.0)
 
 def mouseWheel(event):
