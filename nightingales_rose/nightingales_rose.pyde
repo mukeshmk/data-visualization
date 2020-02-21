@@ -1,8 +1,8 @@
 spin = 0
 zoom = 0
 x1 = 500
-y1 = 500
-x2 = 1300
+y1 = 525
+x2 = 1400
 y2 = 500
 
 def setup():
@@ -39,8 +39,8 @@ def draw():
             # to calc point on the circle
             # X = Cx + (r * cos(angle))
             # Y = Cy + (r * sin(angle))
-            x = (x1 + (270 + zoom*250)*cos(t)) # replace 270 with disr*60 works but looks weird
-            y = (y1 + (270 + zoom*250)*sin(t))
+            x = (x1 + (270 + zoom*220)*cos(t)) # replace 270 with disr*60 works but looks weird
+            y = (y1 + (270 + zoom*220)*sin(t))
 
             pushMatrix()
             translate(x, y)
@@ -53,13 +53,13 @@ def draw():
 
             # diseases
             fill(180, 190, 190)
-            arc(x1, y1, disr*(zoom*100 + 100), disr*(zoom*100 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30))
+            arc(x1, y1, disr*(zoom*90 + 100), disr*(zoom*90 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30))
             # injuries
             fill(100, 80, 80)
-            arc(x1, y1, injr*(zoom*100 + 100), injr*(zoom*100 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30))
+            arc(x1, y1, injr*(zoom*90 + 100), injr*(zoom*90 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30))
             # other causes
             fill(230, 180, 170)
-            arc(x1, y1, othr*(zoom*100 + 100), othr*(zoom*100 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30))
+            arc(x1, y1, othr*(zoom*90 + 100), othr*(zoom*90 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30))
         else:
             # scale down the value
             disr = disr/100
