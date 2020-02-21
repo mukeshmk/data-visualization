@@ -10,10 +10,20 @@ def setup():
     background(0, 0, 0)
 
 def draw():
+    vd = vi = vo = True
     i = 0
     deg = float(spin)*radians(30)
     background(0, 0, 0)
     table = loadTable("nightingale-rose.csv", "header")
+
+    if keyPressed:
+        if key == 'd' or key == 'D':
+            vi = vo = False
+        if key == 'i' or key == 'I':
+            vd = vo = False
+        if key == 'o' or key == 'O':
+            vd = vi = False
+
     for row in table.rows():
         mny = row.getString("Month")
         sz = row.getInt("Average size of army")
@@ -53,13 +63,16 @@ def draw():
 
             # diseases
             fill(180, 190, 190)
-            arc(x1, y1, disr*(zoom*90 + 100), disr*(zoom*90 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30))
+            if vd:
+                arc(x1, y1, disr*(zoom*90 + 100), disr*(zoom*90 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30))
             # injuries
             fill(100, 80, 80)
-            arc(x1, y1, injr*(zoom*90 + 100), injr*(zoom*90 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30))
+            if vi:
+                arc(x1, y1, injr*(zoom*90 + 100), injr*(zoom*90 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30))
             # other causes
             fill(230, 180, 170)
-            arc(x1, y1, othr*(zoom*90 + 100), othr*(zoom*90 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30))
+            if vo:
+                arc(x1, y1, othr*(zoom*90 + 100), othr*(zoom*90 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30))
         else:
             # scale down the value
             disr = disr/100
@@ -89,13 +102,16 @@ def draw():
 
             # diseases
             fill(180, 190, 190)
-            arc(x2, y2, disr*(zoom*100 + 100), disr*(zoom*100 + 100),  deg + float(i-12)*radians(30), deg + float(i-11)*radians(30))
+            if vd:
+                arc(x2, y2, disr*(zoom*100 + 100), disr*(zoom*100 + 100),  deg + float(i-12)*radians(30), deg + float(i-11)*radians(30))
             # injuries
             fill(100, 80, 80)
-            arc(x2, y2, injr*(zoom*100 + 100), injr*(zoom*100 + 100),  deg + float(i-12)*radians(30), deg + float(i-11)*radians(30))
+            if vi:
+                arc(x2, y2, injr*(zoom*100 + 100), injr*(zoom*100 + 100),  deg + float(i-12)*radians(30), deg + float(i-11)*radians(30))
             # other causes
             fill(230, 180, 170)
-            arc(x2, y2, othr*(zoom*100 + 100), othr*(zoom*100 + 100),  deg + float(i-12)*radians(30), deg + float(i-11)*radians(30))
+            if vo:
+                arc(x2, y2, othr*(zoom*100 + 100), othr*(zoom*100 + 100),  deg + float(i-12)*radians(30), deg + float(i-11)*radians(30))
         i = i + 1
         
 def mouseWheel(event):
