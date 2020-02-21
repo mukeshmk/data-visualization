@@ -1,12 +1,12 @@
 spin = 0
 zoom = 0
 x1 = 1300
-y1 = 500
+y1 = 550
 x2 = 350
 y2 = 350
 
 textx = 200
-texty = 700
+texty = 800
 
 def setup():
     fullScreen()
@@ -57,8 +57,8 @@ def draw():
             # Y = Cy + (r * sin(angle))
 
             if disr*50 < 50:
-                x = (x1 + (disr*51 + zoom*disr*51 + 100)*cos(t))
-                y = (y1 + (disr*51 + zoom*disr*51 + 100)*sin(t))
+                x = (x1 + (90)*cos(t))
+                y = (y1 + (90)*sin(t))
             else:
                 x = (x1 + (disr*51 + zoom*disr*51)*cos(t))
                 y = (y1 + (disr*51 + zoom*disr*51)*sin(t))
@@ -70,8 +70,9 @@ def draw():
             # align it to the centre after rotation
             textAlign(CENTER, CENTER)
             fill(255, 255, 255)
+            textSize(20.0)
             # write text after translation
-            text(mny, 0, 0)
+            text(mny.split(" ")[0], 0, 0)
             popMatrix()
 
             stroke(0)
@@ -97,13 +98,23 @@ def draw():
             stroke(255)
 
             # to calc rotational degree
-            t = deg + float(i-12)*radians(30) + radians(15)
+            t = deg + float(i-6)*radians(30) + radians(15)
 
             # to calc point on the circle
             # X = Cx + (r * cos(angle))
             # Y = Cy + (r * sin(angle))
             x = (x2 + (150 + zoom*110)*cos(t))
             y = (y2 + (150 + zoom*110)*sin(t))
+            
+            if disr*50 < 50:
+                x = (x2 + (80 + zoom*20)*cos(t))
+                y = (y2 + (80 + zoom*20)*sin(t))
+            elif injr > disr:
+                x = (x2 + (injr*51 + zoom*injr*51 + 10)*cos(t))
+                y = (y2 + (injr*51 + zoom*injr*51 + 10)*sin(t))
+            else:
+                x = (x2 + (disr*51 + zoom*disr*51 + 10)*cos(t))
+                y = (y2 + (disr*51 + zoom*disr*51 + 10)*sin(t))
 
             pushMatrix()
             translate(x, y)
@@ -112,35 +123,49 @@ def draw():
             textAlign(CENTER, CENTER)
             fill(255, 255, 255)
             # write text after translation
-            text(mny, 0, 0)
+            textSize(20.0)
+            text(mny.split(" ")[0], 0, 0)
             popMatrix()
 
             stroke(0)
             # diseases
             fill('#1B6CD6')
             if vd:
-                arc(x2, y2, disr*(zoom*100 + 100), disr*(zoom*100 + 100),  deg + float(i-12)*radians(30), deg + float(i-11)*radians(30), PIE)
+                arc(x2, y2, disr*(zoom*100 + 100), disr*(zoom*100 + 100),  deg + float(i-6)*radians(30), deg + float(i-5)*radians(30), PIE)
             # injuries
             fill('#c0c0c0')
             if vi:
-                arc(x2, y2, injr*(zoom*100 + 100), injr*(zoom*100 + 100),  deg + float(i-12)*radians(30), deg + float(i-11)*radians(30), PIE)
+                arc(x2, y2, injr*(zoom*100 + 100), injr*(zoom*100 + 100),  deg + float(i-6)*radians(30), deg + float(i-5)*radians(30), PIE)
             # other causes
             fill('#eff5f7')
             if vo:
-                arc(x2, y2, othr*(zoom*100 + 100), othr*(zoom*100 + 100),  deg + float(i-12)*radians(30), deg + float(i-11)*radians(30), PIE)
+                arc(x2, y2, othr*(zoom*100 + 100), othr*(zoom*100 + 100),  deg + float(i-6)*radians(30), deg + float(i-5)*radians(30), PIE)
         i = i + 1
         
         textAlign(LEFT, LEFT)
-        textSize(30.0)
+        textSize(50.0)
         fill('#453BF9')
-        text("Nightingale's Rose", textx, texty)
+        text("NIGHTINGALE'S ROSE", textx+450, texty-700)
+        line(textx+450, texty-700+10, textx+960, texty-700+10)
+        textSize(40.0)
+        fill('#748291')
+        rect(textx-20, texty-50, 550, 220)
+        fill('#453BF9')
+        text("INSTRUCTIONS:", textx, texty)
+        line(textx, texty+5, textx+300, texty+5)
         textSize(20.0)
-        fill('#00E3EF')
+        fill(255)
         text("Scroll with the mouse wheel to rotate ",textx, texty+30)
         text("Click for zoom-in and out", textx, texty+60)
         text("Hold 'd' to see mortality rate due to Zymotic diseases", textx, texty+90)
         text("Hold 'i' to see mortality rate due to Wounds & injuries", textx, texty+120)
         text("Hold 'o' to see mortality rate due to All other causes", textx, texty+150)
+        fill(0)
+        circle(textx-10, texty+25, 7)
+        circle(textx-10, texty+55, 7)
+        circle(textx-10, texty+85, 7)
+        circle(textx-10, texty+115, 7)
+        circle(textx-10, texty+145, 7)
         textSize(12.0)
 
 def mouseWheel(event):
