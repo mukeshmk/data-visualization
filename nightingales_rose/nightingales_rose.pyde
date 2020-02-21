@@ -57,6 +57,7 @@ def draw():
             rotate(t-PI/2)
             # align it to the centre after rotation
             textAlign(CENTER, CENTER)
+            fill(255, 255, 255)
             # write text after translation
             text(mny, 0, 0)
             popMatrix()
@@ -64,15 +65,15 @@ def draw():
             # diseases
             fill(180, 190, 190)
             if vd:
-                arc(x1, y1, disr*(zoom*90 + 100), disr*(zoom*90 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30))
+                arc(x1, y1, disr*(zoom*90 + 100), disr*(zoom*90 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30), PIE)
             # injuries
-            fill(100, 80, 80)
-            if vi:
-                arc(x1, y1, injr*(zoom*90 + 100), injr*(zoom*90 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30))
-            # other causes
             fill(230, 180, 170)
+            if vi:
+                arc(x1, y1, injr*(zoom*90 + 100), injr*(zoom*90 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30), PIE)
+            # other causes
+            fill(100, 80, 80)
             if vo:
-                arc(x1, y1, othr*(zoom*90 + 100), othr*(zoom*90 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30))
+                arc(x1, y1, othr*(zoom*90 + 100), othr*(zoom*90 + 100),  deg + float(i)*radians(30), deg + float(i+1)*radians(30), PIE)
         else:
             # scale down the value
             disr = disr/100
@@ -96,6 +97,7 @@ def draw():
             rotate(t-PI/2)
             # align it to the centre after rotation
             textAlign(CENTER, CENTER)
+            fill(255, 255, 255)
             # write text after translation
             text(mny, 0, 0)
             popMatrix()
@@ -103,15 +105,15 @@ def draw():
             # diseases
             fill(180, 190, 190)
             if vd:
-                arc(x2, y2, disr*(zoom*100 + 100), disr*(zoom*100 + 100),  deg + float(i-12)*radians(30), deg + float(i-11)*radians(30))
+                arc(x2, y2, disr*(zoom*100 + 100), disr*(zoom*100 + 100),  deg + float(i-12)*radians(30), deg + float(i-11)*radians(30), PIE)
             # injuries
-            fill(100, 80, 80)
-            if vi:
-                arc(x2, y2, injr*(zoom*100 + 100), injr*(zoom*100 + 100),  deg + float(i-12)*radians(30), deg + float(i-11)*radians(30))
-            # other causes
             fill(230, 180, 170)
+            if vi:
+                arc(x2, y2, injr*(zoom*100 + 100), injr*(zoom*100 + 100),  deg + float(i-12)*radians(30), deg + float(i-11)*radians(30), PIE)
+            # other causes
+            fill(100, 80, 80)
             if vo:
-                arc(x2, y2, othr*(zoom*100 + 100), othr*(zoom*100 + 100),  deg + float(i-12)*radians(30), deg + float(i-11)*radians(30))
+                arc(x2, y2, othr*(zoom*100 + 100), othr*(zoom*100 + 100),  deg + float(i-12)*radians(30), deg + float(i-11)*radians(30), PIE)
         i = i + 1
         
 def mouseWheel(event):
