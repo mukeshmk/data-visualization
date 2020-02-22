@@ -8,15 +8,23 @@ geoBot = 52.8
 screenLen = 1080
 screenWid = 1920
 
+tempX = -1
+tempY = -1
+
+plat = -1
+plon = -1
+
 def setup():
     fullScreen()
     #size(screenWid, screenLen)
     background(0, 0, 0)
 
 def draw():
+    global tempX, tempY, plat, plon
     table = loadTable("minard-data.csv", "header")
     i = 0
     for row in table.rows():
+        fill(255)
         # city details
         lonc = row.getFloat("LONC")
         latc = row.getFloat("LATC")
@@ -33,15 +41,40 @@ def draw():
         surv = row.getInt("SURV")
         dir = row.getString("DIR")
         div = row.getInt("DIV")
-            
+
         if str(latc) != 'nan': 
             x, y = locToXY(lonc, latc)
             text(city, x, y)
-            i = i + 1
-        
+
+        if str(lont) != 'nan':
+            fill(130)
+            x, y = locToXY(lont, 0)
+            y = 900 - temp*4
+            fill(255)
+            text(str(temp), x, y+20)
+            if tempX != -1:
+                stroke(255)
+                if i != 0:
+                    strokeWeight(1)
+                    line(tempX, tempY, x, y)
+            tempX = x
+            tempY = y
+
+        if str(lonp) != 'nan':
+            if plon != -1:
+                strokeWeight(surv/2500 + surv/10000*0.5)
+                x, y = locToXY(lonp, latp)
+                if i != 1 and i != 0:
+                    line(plon, plat, x, y)
+
+            plon = x
+            plat = y
+
+        i = i + 1
+
 def locToXY(lat, lon):
-    x = screenWid*(lat-geoLeft)/(geoRight-geoLeft)
-    y = screenLen - screenLen*(lon-geoBot)/(geoTop-geoBot)
+    x = screenWid * (lat - geoLeft) / (geoRight - geoLeft)
+    y = screenLen - screenLen * (lon - geoBot) / (geoTop - geoBot)
     return x, y
     
         
