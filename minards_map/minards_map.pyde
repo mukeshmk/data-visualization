@@ -28,7 +28,8 @@ BLACK = 0
 
 # variable realted to toggle
 cty = True
-div_t = [True]* 6
+div_t = [True]* 9
+att = ret = True
 x_t = [x]*3 + [x+z]*3
 y_t = [y, y+z, y+2*z]*2
 clr = [ATTACK] * 3 + [RETREAT] * 3
@@ -38,10 +39,28 @@ def setup():
 
 def draw():
     background(BGCLR)
-    global tempX, tempY, plat, plon, div_t, cty
+    global tempX, tempY, plat, plon, div_t, cty, att, ret
     troops_data = loadTable("data/minards-troops-data.csv", "header")
     city_data = loadTable("data/minards-city-data.csv", "header")
     temp_data = loadTable("data/minards-temp-data.csv", "header")
+    
+    textSize(45)
+    stroke(BLACK)
+    strokeWeight(2.0)
+    text("CHARLES JOSEPH MINARD'S MAP OF THE NAPOLEAN RUSSIA CAMPAIGN",100,100)
+    
+    att = ret = div_t[6] = div_t[7] = div_t[8] = True
+    if keyPressed:
+        if key == 'a' or key == 'A':
+            ret = False
+        if key == 'r' or key == 'R':
+            att = False
+        if key == '1':
+            div_t[7] = div_t[8] = False
+        if key == '2':
+            div_t[6] = div_t[8] = False
+        if key == '3':
+            div_t[6] = div_t[7] = False
 
     i = 0
     for row in temp_data.rows():
@@ -86,22 +105,22 @@ def draw():
                 strokeWeight(sw)
                 x, y = locToXY(latp, lonp)                
                 if i != 1 and i != 0 and i != 28 and i != 45:
-                        if div_t[0] and div == 1 and dir == 'A':
+                        if div_t[0] and div == 1 and dir == 'A' and div_t[6] and att:
                             stroke(ATTACK)
                             line(plon, plat, x, y)
-                        if div_t[3] and div == 1 and dir == 'R':
+                        if div_t[3] and div == 1 and dir == 'R' and div_t[6] and ret:
                             stroke(RETREAT)
                             line(plon, plat, x, y)
-                        if div_t[1] and div == 2 and dir == 'A':
+                        if div_t[1] and div == 2 and dir == 'A' and div_t[7] and att:
                             stroke(ATTACK)
                             line(plon, plat, x, y)
-                        if div_t[4] and div == 2 and dir == 'R':
+                        if div_t[4] and div == 2 and dir == 'R' and div_t[7] and ret:
                             stroke(RETREAT)
                             line(plon, plat, x, y)
-                        if div_t[2] and div == 3 and dir == 'A':
+                        if div_t[2] and div == 3 and dir == 'A' and div_t[8] and att:
                             stroke(ATTACK)
                             line(plon, plat, x, y)
-                        if div_t[5] and div == 3 and dir == 'R':
+                        if div_t[5] and div == 3 and dir == 'R' and div_t[8] and ret:
                             stroke(RETREAT)
                             line(plon, plat, x, y)
             plon = x
