@@ -93,12 +93,12 @@ def draw():
         i = i + 1
     text("*The blue circles represent the total number of days the troops endured that particular temperature", x+500, y+50)
 
-    # loop for legand
+    # loop for legend
     x = 1500
     y = 500
     i = 1
     textSize(30)
-    text("LEGAND", x, y-270)
+    text("LEGEND", x, y-270)
     textSize(15)
     line(x, y-265, x+120, y-265)
     for row in troops_data.rows():
