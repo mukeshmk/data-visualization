@@ -236,6 +236,7 @@ def checkBoxArea():
 
     noFill()
     strokeWeight(2.0)
+    stroke(BLACK)
     rect(x_t[0]-z*2 - 40, y_t[0]-z, 400, 630)
 
     drawBox(cty, x_t[0], y_t[0]-z/1.5, BLACK)
