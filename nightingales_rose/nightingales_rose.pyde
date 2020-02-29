@@ -20,7 +20,7 @@ def draw():
     deg = float(spin)*radians(30)
     strokeWeight(2.0)
     background('#748291')
-    table = loadTable("nightingale-rose.csv", "header")
+    table = loadTable("data/nightingale-rose.csv", "header")
 
     if keyPressed:
         if key == 'd' or key == 'D':
