@@ -1,6 +1,8 @@
 import pandas as pd
 
-df = pd.read_csv('..\\data\\anime.csv')
+df = pd.read_csv('..\\data\\anime.csv', na_values={'episodes' : ['Unknown']})
+values = {'rating': 0, 'genre': 'Others', 'episodes': 0}
+df = df.fillna(value = values)
 
 
 none_df = pd.DataFrame(columns=df.columns)
