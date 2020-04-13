@@ -18,9 +18,34 @@ tv = False
 # chart variables
 pie = True
 bar = False
+comp = False
+comp_list = set()
 
 def setup():
     fullScreen()
+
+def genre_check_box(x, y, genre_dict):
+    global comp_list
+    i = 0
+    j = 0
+    s = 25
+    for _key, _val in genre_dict.items():
+        fill(CLR_LIST[i])
+        x1 = x+(200*j)
+        y1 = y+(25*(i+1)) - (275*j)
+        square(x1, y1, 25)
+        if mousePressed:
+            if mouseX > x1 and mouseX < x1+s and mouseY > y1 and mouseY < y1+s:
+                if (_key, CLR_LIST[i]) in comp_list:
+                    comp_list.remove((_key, CLR_LIST[i]))
+                else:
+                    comp_list.add((_key, CLR_LIST[i]))
+
+        fill(BLACK)
+        text(_key, x+(200*j)+30, y+(25*(i+1)) - (275*j)+25)
+        fill(WHITE)
+        i+=1
+        j = int(i/11)
 
 def pie_chart_legand(x, y, legand_dict):
     i = 0
@@ -35,16 +60,34 @@ def pie_chart_legand(x, y, legand_dict):
         i+=1
         j = int(i/11)
 
-def pie_chart(data_dict, x, y, s1, s2, bias=200):
+def pie_chart(data_dict, x, y, s1, s2, bias=200, clr_lst=None):
     deg = radians(0)
     i = 0
     inc = len(data_dict.keys())
+    if clr_lst is None:
+        clr_lst = CLR_LIST
     for _key, _val in data_dict.items():
-        fill(CLR_LIST[i])
+        fill(clr_lst[i])
         if _val > bias:
             arc(x, y, int(_val*s1), int(_val*s1), deg + i*(radians(360)/(inc)), deg + (i+1)*(radians(360)/(inc)), PIE)
         else:
             arc(x, y, int(_val*s2), int(_val*s2), deg + i*(radians(360)/(inc)), deg + (i+1)*(radians(360)/(inc)), PIE)
+        i+=1
+
+def pie_chart_percent(data_dict, x, y, s1, clr_lst=None):
+    deg = radians(0)
+    i = 0
+    inc = len(data_dict.keys())
+    if clr_lst is None:
+        clr_lst = CLR_LIST
+    
+    tot_val = 0
+    for _key, _val in data_dict.items():
+        tot_val += _val
+    for _key, _val in data_dict.items():
+        fill(clr_lst[i])
+        arc(x, y, s1, s1, deg, deg + (_val/tot_val)*radians(360), PIE)
+        deg += (_val/tot_val)*radians(360)
         i+=1
 
 def hover_over_legand(x1, y1, x2, y2, legand):
@@ -160,7 +203,7 @@ def movie_screen():
 
 
 def tv_screen():
-    global tv, pie, bar
+    global tv, pie, bar, comp
     tv_data = loadTable("data/tv_type_anime.csv", "header")
     
     genre_dict = {}
@@ -196,13 +239,9 @@ def tv_screen():
         genre_dict[genre] = [genre_dict[genre][0], genre_dict[genre][1]/genre_dict[genre][0]]
     
     pie = check_box(100, 100, pie)
-    fill(BLACK)
-    text('Pie Chart', 130, 125)
-    text('Bar Graph', 280, 125)
-    fill(WHITE)
     bar = check_box(250, 100, bar)
     if pie:
-        pie_chart(graph_dict, 400, 350, 100, 200, genre_dict)
+        pie_chart(graph_dict, 400, 350, 100, 200)
         pie_chart_legand(800, 100, graph_dict)
     if bar:
         fill(BLACK)
@@ -210,7 +249,24 @@ def tv_screen():
         text('Rating: ', 905, 1000)
         fill(WHITE)
         bar_graph(graph_dict, 200, 1000, 700, 1000, 200, genre_dict)
-    
+    comp = check_box(410, 100, comp)
+    if comp:
+        pie = False
+        bar = False
+        genre_check_box(800, 100, graph_dict)
+        comp_dict = {}
+        clr_lst = []
+        for item in comp_list:
+            comp_dict[item[0]] = graph_dict[item[0]]
+            clr_lst.append(item[1])
+        pie_chart(comp_dict, 400, 450, 100, 100, 200, clr_lst)
+        pie_chart_percent(comp_dict, 800, 800, 200, clr_lst)
+
+    fill(BLACK)
+    text('Pie Chart', 130, 125)
+    text('Bar Graph', 280, 125)
+    text('Compare Genre', 440, 125)
+    fill(WHITE)
     tv = back_button(tv)
 
 def draw():
