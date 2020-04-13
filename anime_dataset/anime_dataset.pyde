@@ -5,26 +5,35 @@ WHITE = 255
 
 CLR_LIST = ['#C0392B', '#E74C3C', '#9B59B6', '#8E44AD', '#2980B9', '#3498DB', '#1ABC9C',
             '#16A085', '#27AE60', '#2ECC71', '#F1C40F', '#F39C12', '#E67E22', '#D35400',
-            '#ECF0F1', '#BDC3C7', '#95A5A6', '#7F8C8D', '#34495E', '#2C3E50',
+            '#ECF0F1', '#BDC3C7', '#95A5A6', '#7F8C8D', '#34495E', '#2C3E50', '#FF0000',
+            '#800000', '#FFFF00', '#808000', '#00FF00', '#008000', '#00FFFF', '#008080',
+            '#0000FF', '#000080', '#FF00FF', '#800080', '#DAF7A6',
             ## repeated
-            '#C0392B', '#E74C3C', '#9B59B6', '#8E44AD', '#2980B9', '#3498DB', '#1ABC9C',
-            '#16A085', '#27AE60', '#2ECC71', '#F1C40F', '#F39C12', '#E67E22', '#D35400',
-            '#ECF0F1', '#BDC3C7', '#95A5A6', '#7F8C8D', '#34495E', '#2C3E50']
+            '#FFFFFF', '#E67E22', '#D35400', '#ECF0F1', '#BDC3C7', '#95A5A6', '#7F8C8D', '#34495E', '#2C3E50']
 
 # global variables
 movie = False
 tv = False
 
+# chart variables
+pie = True
+bar = False
+
 def setup():
     fullScreen()
 
-def hover_over_legand(x1, y1, x2, y2, legand):
-    if mouseX > x1 and mouseX < x2 and mouseY > y1 and mouseY < y2:
+def pie_chart_legand(x, y, legand_dict):
+    i = 0
+    j = 0
+    for _key, _val in legand_dict.items():
+        fill(CLR_LIST[i])
+        square(x+(200*j), y+(25*(i+1)) - (275*j), 25)
         fill(BLACK)
-        text(legand[0], 1210, 970)
-        text(legand[1], 1200, 1000)
+        text(_key, x+(200*j)+30, y+(25*(i+1)) - (275*j)+25)
+        #text(_val, x+(200*j)+30, y+(25*(i+1)) - (275*j)+25)
         fill(WHITE)
-
+        i+=1
+        j = int(i/11)
 
 def pie_chart(data_dict, x, y, clr1, clr2, s1, s2, bias=200):
     deg = radians(0)
@@ -33,11 +42,18 @@ def pie_chart(data_dict, x, y, clr1, clr2, s1, s2, bias=200):
     for _key, _val in data_dict.items():
         if _val > bias:
             fill(clr1)
-            arc(x, y, int(_val*s1), int(_val*s1), deg + i*(radians(360)/(inc-1)), deg + (i+1)*(radians(360)/(inc-1)), PIE)
+            arc(x, y, int(_val*s1), int(_val*s1), deg + i*(radians(360)/(inc)), deg + (i+1)*(radians(360)/(inc)), PIE)
         else:
             fill(CLR_LIST[i])
-            arc(x, y, int(_val*s2), int(_val*s2), deg + i*(radians(360)/(inc-1)), deg + (i+1)*(radians(360)/(inc-1)), PIE)
+            arc(x, y, int(_val*s2), int(_val*s2), deg + i*(radians(360)/(inc)), deg + (i+1)*(radians(360)/(inc)), PIE)
         i+=1
+
+def hover_over_legand(x1, y1, x2, y2, legand):
+    if mouseX > x1 and mouseX < x2 and mouseY > y1 and mouseY < y2:
+        fill(BLACK)
+        text(legand[0], 1010, 970)
+        text(legand[1], 1000, 1000)
+        fill(WHITE)
         
 def bar_graph(data_dict, x, y, w, max_val, s, legand):
     fill(WHITE)
@@ -131,7 +147,7 @@ def movie_screen():
 
 
 def tv_screen():
-    global tv
+    global tv, pie, bar
     tv_data = loadTable("data/tv_type_anime.csv", "header")
     
     genre_dict = {}
@@ -166,11 +182,21 @@ def tv_screen():
         graph_dict[genre] = genre_dict[genre][1]/genre_dict[genre][0] - 5
         genre_dict[genre] = [genre_dict[genre][0], genre_dict[genre][1]/genre_dict[genre][0]]
     
-    #pie_chart(genre_dict, 400, 400, '#008080', '#00ff00', 0.5, 2, 250)
-    
-    text('Genre: ', 1110, 970)
-    text('Rating: ', 1105, 1000)
-    bar_graph(graph_dict, 200, 1000, 700, 1000, 200, genre_dict)
+    pie = check_box(100, 100, pie)
+    fill(BLACK)
+    text('Pie Chart', 130, 125)
+    text('Bar Graph', 280, 125)
+    fill(WHITE)
+    bar = check_box(250, 100, bar)
+    if pie:
+        pie_chart(graph_dict, 400, 350, '#008080', '#00ff00', 100, 200, genre_dict)
+        pie_chart_legand(800, 100, graph_dict)
+    if bar:
+        fill(BLACK)
+        text('Genre: ', 910, 970)
+        text('Rating: ', 905, 1000)
+        fill(WHITE)
+        bar_graph(graph_dict, 200, 1000, 700, 1000, 200, genre_dict)
     
     tv = back_button(tv)
 
