@@ -10,6 +10,14 @@ tv = False
 def setup():
     fullScreen()
 
+def hover_over_legand(x1, y1, x2, y2, legand):
+    if mouseX > x1 and mouseX < x2 and mouseY > y1 and mouseY < y2:
+        fill(BLACK)
+        text(legand[0], 1210, 970)
+        text(legand[1], 1200, 1000)
+        fill(WHITE)
+
+
 def pie_chart(data_dict, x, y, clr1, clr2, s1, s2, bias):
     deg = radians(0)
     i = 0
@@ -23,7 +31,7 @@ def pie_chart(data_dict, x, y, clr1, clr2, s1, s2, bias):
             arc(x, y, _val*s2, _val*s2, deg + i*(radians(360)/inc), deg + (i+1)*(radians(360)/inc), PIE)
         i+=1
         
-def bar_graph(data_dict, x, y, w, max_val):
+def bar_graph(data_dict, x, y, w, max_val, s, legand):
     fill(WHITE)
     i = 0
     l = len(data_dict.keys())
@@ -31,8 +39,10 @@ def bar_graph(data_dict, x, y, w, max_val):
         if _val > max_val:
             rect(x+(w/l)*i, y, w/l, -max_val+50)
             rect(x+(w/l)*i, y-max_val+40, w/l, -50)
+            points[_key] = [x+(w/l)*i-w/l, y-_val*s, x+(w/l)*i, y]
         else:
-            rect(x+(w/l)*i, y, w/l, -_val)
+            rect(x+(w/l)*i, y, w/l, -_val*s)
+            hover_over_legand(x+(w/l)*i, y-_val*s, x+(w/l)*i+w/l, y, [_key, legand[_key][1]])
         i+=1
 
 def draw_check_box(val, x, y, clr):
@@ -120,22 +130,31 @@ def tv_screen():
         
         for genre in genre_list:
             if genre not in genre_dict:
-                genre_dict[genre] = 0
-            genre_dict[genre] += 1
+                genre_dict[genre] = [0, 0.0]
+            genre_dict[genre] = [genre_dict[genre][0]+1, genre_dict[genre][1]+rating]
 
     others = 0
+    o_rating = 0.0
     k =0
-    for genre, count in genre_dict.items():
-        if count <= 50:
-            others += count
+    for genre, val in genre_dict.items():
+        if val[0] <= 50:
+            others += val[0]
+            o_rating += val[1]
             k +=1
             del genre_dict[genre]
     
-    genre_dict['Others'] = others
+    genre_dict['Others'] = [others, o_rating]
+    
+    graph_dict = {}
+    for genre, val in genre_dict.items():
+        graph_dict[genre] = genre_dict[genre][1]/genre_dict[genre][0] - 5
+        genre_dict[genre] = [genre_dict[genre][0], genre_dict[genre][1]/genre_dict[genre][0]]
     
     #pie_chart(genre_dict, 400, 400, '#008080', '#00ff00', 0.5, 2, 250)
     
-    bar_graph(genre_dict, 200, 1000, 500, 600)
+    text('Genre: ', 1110, 970)
+    text('Rating: ', 1105, 1000)
+    bar_graph(graph_dict, 200, 1000, 700, 1000, 200, genre_dict)
     
     tv = back_button(tv)
 
