@@ -34,10 +34,10 @@ for index, row in df.iterrows():
         G2.add_node(genre)
         if i > 0:
             G2.add_edge(genre, anime_genre[i-1])
-            print(genre + " : " + anime_genre[i-1] + " : " + str(i))
+            #print(genre + " : " + anime_genre[i-1] + " : " + str(i))
         i+=1
 
 
 plt.figure(figsize = (8, 8))
-nx.draw(G2, with_labels = True)
+nx.draw(G2, with_labels = True, layout = nx.spring_layout(G2, k=0.5, iterations=10))
 plt.savefig("test2.png", dpi = 75)
