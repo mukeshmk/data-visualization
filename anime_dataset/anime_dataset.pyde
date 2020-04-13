@@ -35,16 +35,15 @@ def pie_chart_legand(x, y, legand_dict):
         i+=1
         j = int(i/11)
 
-def pie_chart(data_dict, x, y, clr1, clr2, s1, s2, bias=200):
+def pie_chart(data_dict, x, y, s1, s2, bias=200):
     deg = radians(0)
     i = 0
     inc = len(data_dict.keys())
     for _key, _val in data_dict.items():
+        fill(CLR_LIST[i])
         if _val > bias:
-            fill(clr1)
             arc(x, y, int(_val*s1), int(_val*s1), deg + i*(radians(360)/(inc)), deg + (i+1)*(radians(360)/(inc)), PIE)
         else:
-            fill(CLR_LIST[i])
             arc(x, y, int(_val*s2), int(_val*s2), deg + i*(radians(360)/(inc)), deg + (i+1)*(radians(360)/(inc)), PIE)
         i+=1
 
@@ -106,7 +105,7 @@ def selection_screen():
     
 
 def movie_screen():
-    global movie
+    global movie, pie, bar
     movie_data = loadTable("data/movie_type_anime.csv", "header")
     
     genre_dict = {}
@@ -128,7 +127,7 @@ def movie_screen():
     o_rating = 0.0
     k =0
     for genre, val in genre_dict.items():
-        if val[0] <= 50:
+        if val[0] <= 20:
             others += val[0]
             o_rating += val[1]
             k +=1
@@ -138,10 +137,24 @@ def movie_screen():
 
     graph_dict = {}
     for genre, val in genre_dict.items():
-        graph_dict[genre] = genre_dict[genre][1]/genre_dict[genre][0] - 5
+        graph_dict[genre] = genre_dict[genre][1]/genre_dict[genre][0]
         genre_dict[genre] = [genre_dict[genre][0], genre_dict[genre][1]/genre_dict[genre][0]]
     
-    pie_chart(graph_dict, 400, 400, '#008080', '#28E1D5', 100, 250)
+    pie = check_box(100, 100, pie)
+    fill(BLACK)
+    text('Pie Chart', 130, 125)
+    text('Bar Graph', 280, 125)
+    fill(WHITE)
+    bar = check_box(250, 100, bar)
+    if pie:
+        pie_chart(graph_dict, 400, 400, 50, 50)
+        pie_chart_legand(800, 100, graph_dict)
+    if bar:
+        fill(BLACK)
+        text('Genre: ', 910, 970)
+        text('Rating: ', 905, 1000)
+        fill(WHITE)
+        bar_graph(graph_dict, 200, 1000, 700, 1000, 50, genre_dict)
 
     movie = back_button(movie)
 
@@ -189,7 +202,7 @@ def tv_screen():
     fill(WHITE)
     bar = check_box(250, 100, bar)
     if pie:
-        pie_chart(graph_dict, 400, 350, '#008080', '#00ff00', 100, 200, genre_dict)
+        pie_chart(graph_dict, 400, 350, 100, 200, genre_dict)
         pie_chart_legand(800, 100, graph_dict)
     if bar:
         fill(BLACK)
