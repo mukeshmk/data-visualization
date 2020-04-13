@@ -3,6 +3,14 @@ BGCLR = '#FFFFFF'
 BLACK = 0
 WHITE = 255
 
+CLR_LIST = ['#C0392B', '#E74C3C', '#9B59B6', '#8E44AD', '#2980B9', '#3498DB', '#1ABC9C',
+            '#16A085', '#27AE60', '#2ECC71', '#F1C40F', '#F39C12', '#E67E22', '#D35400',
+            '#ECF0F1', '#BDC3C7', '#95A5A6', '#7F8C8D', '#34495E', '#2C3E50',
+            ## repeated
+            '#C0392B', '#E74C3C', '#9B59B6', '#8E44AD', '#2980B9', '#3498DB', '#1ABC9C',
+            '#16A085', '#27AE60', '#2ECC71', '#F1C40F', '#F39C12', '#E67E22', '#D35400',
+            '#ECF0F1', '#BDC3C7', '#95A5A6', '#7F8C8D', '#34495E', '#2C3E50']
+
 # global variables
 movie = False
 tv = False
@@ -18,17 +26,17 @@ def hover_over_legand(x1, y1, x2, y2, legand):
         fill(WHITE)
 
 
-def pie_chart(data_dict, x, y, clr1, clr2, s1, s2, bias):
+def pie_chart(data_dict, x, y, clr1, clr2, s1, s2, bias=200):
     deg = radians(0)
     i = 0
     inc = len(data_dict.keys())
     for _key, _val in data_dict.items():
         if _val > bias:
             fill(clr1)
-            arc(x, y, _val*s1, _val*s1, deg + i*(radians(360)/inc), deg + (i+1)*(radians(360)/inc), PIE)
+            arc(x, y, int(_val*s1), int(_val*s1), deg + i*(radians(360)/(inc-1)), deg + (i+1)*(radians(360)/(inc-1)), PIE)
         else:
-            fill(clr2)
-            arc(x, y, _val*s2, _val*s2, deg + i*(radians(360)/inc), deg + (i+1)*(radians(360)/inc), PIE)
+            fill(CLR_LIST[i])
+            arc(x, y, int(_val*s2), int(_val*s2), deg + i*(radians(360)/(inc-1)), deg + (i+1)*(radians(360)/(inc-1)), PIE)
         i+=1
         
 def bar_graph(data_dict, x, y, w, max_val, s, legand):
@@ -36,6 +44,7 @@ def bar_graph(data_dict, x, y, w, max_val, s, legand):
     i = 0
     l = len(data_dict.keys())
     for _key, _val in data_dict.items():
+        fill(CLR_LIST[i])
         if _val > max_val:
             rect(x+(w/l)*i, y, w/l, -max_val+50)
             rect(x+(w/l)*i, y-max_val+40, w/l, -50)
@@ -89,27 +98,34 @@ def movie_screen():
 
         name = row.getString('name')
         genre_list = row.getString('genre').split(', ')
-        #eps = row.getInt('episodes')
+        eps = row.getInt('episodes')
         #type = row.getString('type')
         rating = row.getFloat('rating')
         mem = row.getInt('members')
         
         for genre in genre_list:
             if genre not in genre_dict:
-                genre_dict[genre] = 0
-            genre_dict[genre] += 1
+                genre_dict[genre] = [0, 0.0]
+            genre_dict[genre] = [genre_dict[genre][0]+1, genre_dict[genre][1]+rating]
 
     others = 0
+    o_rating = 0.0
     k =0
-    for genre, count in genre_dict.items():
-        if count <= 30:
-            others += count
+    for genre, val in genre_dict.items():
+        if val[0] <= 50:
+            others += val[0]
+            o_rating += val[1]
             k +=1
             del genre_dict[genre]
     
-    genre_dict['Others'] = others
+    genre_dict['Others'] = [others, o_rating]
+
+    graph_dict = {}
+    for genre, val in genre_dict.items():
+        graph_dict[genre] = genre_dict[genre][1]/genre_dict[genre][0] - 5
+        genre_dict[genre] = [genre_dict[genre][0], genre_dict[genre][1]/genre_dict[genre][0]]
     
-    pie_chart(genre_dict, 400, 400, '#008080', '#00ffff', 1, 4, 200)
+    pie_chart(graph_dict, 400, 400, '#008080', '#28E1D5', 100, 250)
 
     movie = back_button(movie)
 
@@ -144,7 +160,7 @@ def tv_screen():
             del genre_dict[genre]
     
     genre_dict['Others'] = [others, o_rating]
-    
+
     graph_dict = {}
     for genre, val in genre_dict.items():
         graph_dict[genre] = genre_dict[genre][1]/genre_dict[genre][0] - 5
