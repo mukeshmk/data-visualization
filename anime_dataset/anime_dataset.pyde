@@ -196,7 +196,7 @@ def movie_screen():
     bar = check_box(250, 100, bar)
     if pie:
         pie_chart(graph_dict, 400, 400, 50, 50)
-        legand_check_box(800, 100, graph_dict)
+        legand_check_box(1100, 100, graph_dict, add_val = 0)
     if bar:
         fill(BLACK)
         text('Genre: ', 910, 970)
