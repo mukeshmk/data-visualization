@@ -19,12 +19,27 @@ tv = False
 pie = True
 bar = False
 comp = False
+scatter = False
 comp_list = set()
 
 def setup():
     fullScreen()
 
-def genre_check_box(x, y, genre_dict):
+def scatter_plot(data_dict, x, y, w, clr_lst=None):
+    i = 0
+    l = len(data_dict.keys())
+    if clr_lst is None:
+        clr_lst = CLR_LIST
+    for _key, _val in data_dict.items():
+        fill(clr_lst[i])
+        x1 = x+(w/l)*i
+        y1 = y - _val[0]/3
+        r = _val[1]*10
+        #text(str(x1) + " : " + str(y1) + " : " + str(r), 1000, 50+30*i)
+        circle(x1, y1, r)
+        i+=1
+
+def legand_check_box(x, y, genre_dict, enable = False, add_val = 5):
     global comp_list
     i = 0
     j = 0
@@ -34,28 +49,16 @@ def genre_check_box(x, y, genre_dict):
         x1 = x+(200*j)
         y1 = y+(25*(i+1)) - (275*j)
         square(x1, y1, 25)
-        if mousePressed:
+        if mousePressed and enable:
             if mouseX > x1 and mouseX < x1+s and mouseY > y1 and mouseY < y1+s:
                 if (_key, CLR_LIST[i]) in comp_list:
                     comp_list.remove((_key, CLR_LIST[i]))
                 else:
                     comp_list.add((_key, CLR_LIST[i]))
-
         fill(BLACK)
+        if mouseX > x1 and mouseX < x1+s and mouseY > y1 and mouseY < y1+s:
+            text('Value: ' + str(_val + add_val), x, y)
         text(_key, x+(200*j)+30, y+(25*(i+1)) - (275*j)+25)
-        fill(WHITE)
-        i+=1
-        j = int(i/11)
-
-def pie_chart_legand(x, y, legand_dict):
-    i = 0
-    j = 0
-    for _key, _val in legand_dict.items():
-        fill(CLR_LIST[i])
-        square(x+(200*j), y+(25*(i+1)) - (275*j), 25)
-        fill(BLACK)
-        text(_key, x+(200*j)+30, y+(25*(i+1)) - (275*j)+25)
-        #text(_val, x+(200*j)+30, y+(25*(i+1)) - (275*j)+25)
         fill(WHITE)
         i+=1
         j = int(i/11)
@@ -97,12 +100,14 @@ def hover_over_legand(x1, y1, x2, y2, legand):
         text(legand[1], 1000, 1000)
         fill(WHITE)
         
-def bar_graph(data_dict, x, y, w, max_val, s, legand):
+def bar_graph(data_dict, x, y, w, max_val, s, legand, clr_lst=None):
     fill(WHITE)
     i = 0
     l = len(data_dict.keys())
+    if clr_lst is None:
+        clr_lst = CLR_LIST
     for _key, _val in data_dict.items():
-        fill(CLR_LIST[i])
+        fill(clr_lst[i])
         if _val > max_val:
             rect(x+(w/l)*i, y, w/l, -max_val+50)
             rect(x+(w/l)*i, y-max_val+40, w/l, -50)
@@ -191,7 +196,7 @@ def movie_screen():
     bar = check_box(250, 100, bar)
     if pie:
         pie_chart(graph_dict, 400, 400, 50, 50)
-        pie_chart_legand(800, 100, graph_dict)
+        legand_check_box(800, 100, graph_dict)
     if bar:
         fill(BLACK)
         text('Genre: ', 910, 970)
@@ -203,7 +208,7 @@ def movie_screen():
 
 
 def tv_screen():
-    global tv, pie, bar, comp
+    global tv, pie, bar, comp, scatter
     tv_data = loadTable("data/tv_type_anime.csv", "header")
     
     genre_dict = {}
@@ -240,32 +245,53 @@ def tv_screen():
     
     pie = check_box(100, 100, pie)
     bar = check_box(250, 100, bar)
+    scatter = check_box(410, 100, scatter)
+    comp = check_box(590, 100, comp)
     if pie:
         pie_chart(graph_dict, 400, 350, 100, 200)
-        pie_chart_legand(800, 100, graph_dict)
+        legand_check_box(1300, 100, graph_dict)
     if bar:
         fill(BLACK)
         text('Genre: ', 910, 970)
         text('Rating: ', 905, 1000)
         fill(WHITE)
-        bar_graph(graph_dict, 200, 1000, 700, 1000, 200, genre_dict)
-    comp = check_box(410, 100, comp)
+        bar_graph(graph_dict, 200, 1050, 700, 1000, 200, genre_dict)
+    if scatter:
+        pie = False
+        bar = False
+        comp = False
+        scatter_plot(genre_dict, 200, 1000, 1400)
+        legand_check_box(1300, 100, graph_dict)
+        fill(BLACK)
+        line(140, 1030, 1650, 1030)
+        line(140, 1030, 140, 200)
+        text('Genre', 750, 1060)
+        text('Anime\nCount', 40, 550)
+        fill(WHITE)
     if comp:
         pie = False
         bar = False
-        genre_check_box(800, 100, graph_dict)
+        scatter = False
+        legand_check_box(1300, 100, graph_dict, True)
         comp_dict = {}
         clr_lst = []
         for item in comp_list:
             comp_dict[item[0]] = graph_dict[item[0]]
             clr_lst.append(item[1])
-        pie_chart(comp_dict, 400, 450, 100, 100, 200, clr_lst)
-        pie_chart_percent(comp_dict, 800, 800, 200, clr_lst)
+        pie_chart(comp_dict, 400, 400, 100, 100, 200, clr_lst)
+        pie_chart_percent(comp_dict, 1200, 800, 200, clr_lst)
+        bar_graph(comp_dict, 200, 1050, 700, 1000, 200, genre_dict, clr_lst)
+        if len(comp_dict.keys()) > 0:
+            fill(BLACK)
+            text('Genre: ', 910, 970)
+            text('Rating: ', 905, 1000)
+            fill(WHITE)
 
     fill(BLACK)
     text('Pie Chart', 130, 125)
     text('Bar Graph', 280, 125)
-    text('Compare Genre', 440, 125)
+    text('Scatter Plot', 440, 125)
+    text('Compare Genre', 620, 125)
     fill(WHITE)
     tv = back_button(tv)
 
