@@ -20,10 +20,51 @@ pie = True
 bar = False
 comp = False
 scatter = False
+box_plt = False
 comp_list = set()
 
 def setup():
     fullScreen()
+
+def median(sortedLst):
+    # assumes a sorted list
+    lstLen = len(sortedLst)
+    index = (lstLen - 1) // 2
+
+    if (lstLen % 2):
+        return sortedLst[0: index+1], sortedLst[index: lstLen], sortedLst[index]
+    else:
+        return sortedLst[0: index], sortedLst[index+1: lstLen], (sortedLst[index] + sortedLst[index + 1])/2.0
+
+def draw_blox_plot(x, y, w, val_lst, i):
+    s = 100
+    o = 200
+    if 0 in val_lst:
+        val_lst =  [e for e in val_lst if e != 0]
+    sl = sorted(val_lst)
+    sl1, sl2, q2 = median(sl)
+    _, _, q1 = median(sl1)
+    _, _, q3 = median(sl2)
+    iqr = q3 - q1
+    _min = min(sl)
+    _max = max(sl)
+    rect(x, y + o - q1*s, w-10, -iqr*s)
+    line(x + int((w-10)/2), y - _min*s+o, x + int((w-10)/2), y - q1*s+o)
+    line(x + int((w-10)/2), y - q3*s+o, x + int((w-10)/2), y - _max*s+o)
+    line(x, y - _min*s+o, x + w-10, y - _min*s+o)
+    line(x, y - _max*s+o, x + w-10, y - _max*s+o)
+    line(x, y - q2*s+o, x + w-10, y - q2*s+o)
+
+def box_plot(data_dict, x, y, w, clr_lst=None):
+    i = 0
+    l = len(data_dict.keys())
+    if clr_lst is None:
+        clr_lst = CLR_LIST
+    for _key, _val in data_dict.items():
+        fill(clr_lst[i])
+        x1 = x+(w/l)*i
+        draw_blox_plot(x1, y, w/l, _val, i)
+        i+=1
 
 def scatter_plot(data_dict, x, y, w, clr_lst=None):
     i = 0
@@ -35,7 +76,6 @@ def scatter_plot(data_dict, x, y, w, clr_lst=None):
         x1 = x+(w/l)*i
         y1 = y - _val[0]/3
         r = _val[1]*10
-        #text(str(x1) + " : " + str(y1) + " : " + str(r), 1000, 50+30*i)
         circle(x1, y1, r)
         i+=1
 
@@ -242,10 +282,11 @@ def movie_screen():
 
 
 def tv_screen():
-    global tv, pie, bar, comp, scatter
+    global tv, pie, bar, comp, scatter, box_plt
     tv_data = loadTable("data/tv_type_anime.csv", "header")
     
     genre_dict = {}
+    genre_rating_dict = {}
     for row in tv_data.rows():
 
         name = row.getString('name')
@@ -258,7 +299,9 @@ def tv_screen():
         for genre in genre_list:
             if genre not in genre_dict:
                 genre_dict[genre] = [0, 0.0]
+                genre_rating_dict[genre] = []
             genre_dict[genre] = [genre_dict[genre][0]+1, genre_dict[genre][1]+rating]
+            genre_rating_dict[genre].append(rating)
 
     others = 0
     o_rating = 0.0
@@ -280,11 +323,29 @@ def tv_screen():
     pie = check_box(100, 100, pie)
     bar = check_box(250, 100, bar)
     scatter = check_box(410, 100, scatter)
-    comp = check_box(590, 100, comp)
+    box_plt = check_box(590, 100, box_plt)
+    comp = check_box(750, 100, comp)
+
+    fill(BLACK)
+    text('Pie Chart', 130, 125)
+    text('Bar Graph', 280, 125)
+    text('Scatter Plot', 440, 125)
+    text('Box Plot', 620, 125)
+    text('Compare Genre', 780, 125)
+    fill(WHITE)
+
     if pie:
-        pie_chart(graph_dict, 400, 350, 100, 200)
+        bar = False
+        scatter = False
+        box_plt = False
+        comp = False
+        pie_chart(graph_dict, 500, 600, 100, 200)
         legand_check_box(1300, 100, graph_dict)
     if bar:
+        pie = False
+        scatter = False
+        box_plt = False
+        comp = False
         fill(BLACK)
         text('Genre: ', 910, 970)
         text('Rating: ', 905, 1000)
@@ -293,6 +354,7 @@ def tv_screen():
     if scatter:
         pie = False
         bar = False
+        box_plt = False
         comp = False
         scatter_plot(genre_dict, 200, 1000, 1400)
         legand_check_box(1300, 100, graph_dict)
@@ -301,6 +363,19 @@ def tv_screen():
         line(140, 1030, 140, 200)
         text('Genre', 750, 1060)
         text('Anime\nCount', 40, 550)
+        fill(WHITE)
+    if box_plt:
+        pie = False
+        bar = False
+        scatter = False
+        comp = False
+        box_plot(genre_rating_dict, 80, 1100, 1400)
+        legand_check_box(1300, 60, graph_dict)
+        fill(BLACK)
+        line(70, 1060, 1550, 1060)
+        line(70, 1060, 70, 300)
+        text('Genre', 1450, 1000)
+        text('Rating', 100, 320)
         fill(WHITE)
     if comp:
         pie = False
@@ -321,12 +396,6 @@ def tv_screen():
             text('Rating: ', 905, 1000)
             fill(WHITE)
 
-    fill(BLACK)
-    text('Pie Chart', 130, 125)
-    text('Bar Graph', 280, 125)
-    text('Scatter Plot', 440, 125)
-    text('Compare Genre', 620, 125)
-    fill(WHITE)
     tv = back_button(tv)
 
 def draw():
