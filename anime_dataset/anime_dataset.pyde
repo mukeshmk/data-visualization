@@ -42,6 +42,8 @@ def draw_blox_plot(x, y, w, val_lst, i):
     if 0 in val_lst:
         val_lst =  [e for e in val_lst if e != 0]
     sl = sorted(val_lst)
+    if len(val_lst) < 3:
+        return
     sl1, sl2, q2 = median(sl)
     _, _, q1 = median(sl1)
     _, _, q3 = median(sl2)
@@ -193,10 +195,11 @@ def selection_screen():
     
 
 def movie_screen():
-    global movie, pie, bar, comp, scatter
+    global movie, pie, bar, comp, scatter, box_plt
     movie_data = loadTable("data/movie_type_anime.csv", "header")
     
     genre_dict = {}
+    genre_rating_dict = {}
     for row in movie_data.rows():
 
         name = row.getString('name')
@@ -209,7 +212,9 @@ def movie_screen():
         for genre in genre_list:
             if genre not in genre_dict:
                 genre_dict[genre] = [0, 0.0]
+                genre_rating_dict[genre] = []
             genre_dict[genre] = [genre_dict[genre][0]+1, genre_dict[genre][1]+rating]
+            genre_rating_dict[genre].append(rating)
 
     others = 0
     o_rating = 0.0
@@ -231,11 +236,29 @@ def movie_screen():
     pie = check_box(100, 100, pie)
     bar = check_box(250, 100, bar)
     scatter = check_box(410, 100, scatter)
-    comp = check_box(590, 100, comp)
+    box_plt = check_box(590, 100, box_plt)
+    comp = check_box(750, 100, comp)
+
+    fill(BLACK)
+    text('Pie Chart', 130, 125)
+    text('Bar Graph', 280, 125)
+    text('Scatter Plot', 440, 125)
+    text('Box Plot', 620, 125)
+    text('Compare Genre', 780, 125)
+    fill(WHITE)
+
     if pie:
+        bar = False
+        scatter = False
+        box_plt = False
+        comp = False
         pie_chart(graph_dict, 400, 400, 50, 50)
         legand_check_box(1100, 100, graph_dict, add_val = 0)
     if bar:
+        pie = False
+        scatter = False
+        box_plt = False
+        comp = False
         fill(BLACK)
         text('Genre: ', 910, 970)
         text('Rating: ', 905, 1000)
@@ -244,6 +267,7 @@ def movie_screen():
     if scatter:
         pie = False
         bar = False
+        box_plt = False
         comp = False
         scatter_plot(genre_dict, 200, 1000, 1400)
         legand_check_box(1100, 100, graph_dict, add_val = 0)
@@ -253,10 +277,24 @@ def movie_screen():
         text('Genre', 750, 1060)
         text('Anime\nMovie\nCount', 40, 530)
         fill(WHITE)
+    if box_plt:
+        pie = False
+        bar = False
+        scatter = False
+        comp = False
+        box_plot(genre_rating_dict, 80, 1100, 1400)
+        legand_check_box(1330, 60, graph_dict, add_val = 0)
+        fill(BLACK)
+        line(70, 1060, 1550, 1060)
+        line(70, 1060, 70, 300)
+        text('Genre', 1450, 1000)
+        text('Rating', 100, 320)
+        fill(WHITE)
     if comp:
         pie = False
         bar = False
         scatter = False
+        box_plt = False
         legand_check_box(1100, 100, graph_dict, True, 0)
         comp_dict = {}
         clr_lst = []
@@ -272,12 +310,6 @@ def movie_screen():
             text('Rating: ', 905, 1000)
             fill(WHITE)
 
-    fill(BLACK)
-    text('Pie Chart', 130, 125)
-    text('Bar Graph', 280, 125)
-    text('Scatter Plot', 440, 125)
-    text('Compare Genre', 620, 125)
-    fill(WHITE)
     movie = back_button(movie)
 
 
@@ -381,6 +413,7 @@ def tv_screen():
         pie = False
         bar = False
         scatter = False
+        box_plt = False
         legand_check_box(1300, 100, graph_dict, True)
         comp_dict = {}
         clr_lst = []
