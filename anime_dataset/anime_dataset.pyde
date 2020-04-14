@@ -192,15 +192,20 @@ def selection_screen():
     fill(BLACK)
     text('Anime Movie', 600+32, 400+22)
     text('Anime TV Shows', 600+32, 500+22)
-    
 
-def movie_screen():
-    global movie, pie, bar, comp, scatter, box_plt
-    movie_data = loadTable("data/movie_type_anime.csv", "header")
+def screen(type):
+    global movie, tv, pie, bar, comp, scatter, box_plt
+    data = []
+    if type == 'tv':
+        data = loadTable("data/tv_type_anime.csv", "header")
+    elif type == 'movie':
+        data = loadTable("data/movie_type_anime.csv", "header")
+    else:
+        return
     
     genre_dict = {}
     genre_rating_dict = {}
-    for row in movie_data.rows():
+    for row in data.rows():
 
         name = row.getString('name')
         genre_list = row.getString('genre').split(', ')
@@ -218,19 +223,29 @@ def movie_screen():
 
     others = 0
     o_rating = 0.0
-    k =0
+    k = 0
+    s = 0
+    if type == 'tv':
+        s = 50
+    elif type == 'movie':
+        s = 20
     for genre, val in genre_dict.items():
-        if val[0] <= 20:
+        if val[0] <= s:
             others += val[0]
             o_rating += val[1]
             k +=1
             del genre_dict[genre]
     
     genre_dict['Others'] = [others, o_rating]
+    c = 0
+    if type == 'tv':
+        c = 5
+    elif type == 'movie':
+        c = 0
 
     graph_dict = {}
     for genre, val in genre_dict.items():
-        graph_dict[genre] = genre_dict[genre][1]/genre_dict[genre][0]
+        graph_dict[genre] = genre_dict[genre][1]/genre_dict[genre][0] - c
         genre_dict[genre] = [genre_dict[genre][0], genre_dict[genre][1]/genre_dict[genre][0]]
     
     pie = check_box(100, 100, pie)
@@ -252,8 +267,12 @@ def movie_screen():
         scatter = False
         box_plt = False
         comp = False
-        pie_chart(graph_dict, 400, 400, 50, 50)
-        legand_check_box(1100, 100, graph_dict, add_val = 0)
+        if type == 'tv':
+            pie_chart(graph_dict, 500, 600, 100, 200)
+            legand_check_box(1300, 100, graph_dict)
+        elif type == 'movie':
+            pie_chart(graph_dict, 400, 400, 50, 50)
+            legand_check_box(1100, 100, graph_dict, add_val = 0)
     if bar:
         pie = False
         scatter = False
@@ -263,19 +282,28 @@ def movie_screen():
         text('Genre: ', 910, 970)
         text('Rating: ', 905, 1000)
         fill(WHITE)
-        bar_graph(graph_dict, 200, 1000, 700, 1000, 50, genre_dict)
+        if type == 'tv':
+            bar_graph(graph_dict, 200, 1050, 700, 1000, 200, genre_dict)
+        elif type == 'movie':
+            bar_graph(graph_dict, 200, 1000, 700, 1000, 50, genre_dict)
     if scatter:
         pie = False
         bar = False
         box_plt = False
         comp = False
         scatter_plot(genre_dict, 200, 1000, 1400)
-        legand_check_box(1100, 100, graph_dict, add_val = 0)
+        if type == 'tv':
+            legand_check_box(1300, 100, graph_dict)
+        else:
+            legand_check_box(1100, 100, graph_dict, add_val = 0)
         fill(BLACK)
         line(140, 1030, 1650, 1030)
         line(140, 1030, 140, 200)
         text('Genre', 750, 1060)
-        text('Anime\nMovie\nCount', 40, 530)
+        if type == 'tv':
+            text('Anime\nCount', 40, 550)
+        elif type == 'movie':
+            text('Anime\nMovie\nCount', 40, 530)
         fill(WHITE)
     if box_plt:
         pie = False
@@ -283,7 +311,10 @@ def movie_screen():
         scatter = False
         comp = False
         box_plot(genre_rating_dict, 80, 1100, 1400)
-        legand_check_box(1330, 60, graph_dict, add_val = 0)
+        if type == 'tv':
+            legand_check_box(1300, 60, graph_dict)
+        elif type == 'movie':
+            legand_check_box(1330, 60, graph_dict, add_val = 0)
         fill(BLACK)
         line(70, 1060, 1550, 1060)
         line(70, 1060, 70, 300)
@@ -295,141 +326,30 @@ def movie_screen():
         bar = False
         scatter = False
         box_plt = False
-        legand_check_box(1100, 100, graph_dict, True, 0)
         comp_dict = {}
         clr_lst = []
         for item in comp_list:
             comp_dict[item[0]] = graph_dict[item[0]]
             clr_lst.append(item[1])
-        pie_chart(comp_dict, 400, 400, 80, 50, 200, clr_lst)
+        if type == 'tv':
+            legand_check_box(1300, 100, graph_dict, True)
+            pie_chart(comp_dict, 400, 400, 100, 100, 200, clr_lst)
+            bar_graph(comp_dict, 200, 1050, 700, 1000, 200, genre_dict, clr_lst)
+        elif type == 'movie':
+            legand_check_box(1100, 100, graph_dict, True, 0)
+            pie_chart(comp_dict, 400, 400, 80, 50, 200, clr_lst)
+            bar_graph(comp_dict, 200, 1050, 700, 1000, 50, genre_dict, clr_lst)
         pie_chart_percent(comp_dict, 1200, 800, 200, clr_lst)
-        bar_graph(comp_dict, 200, 1050, 700, 1000, 50, genre_dict, clr_lst)
         if len(comp_dict.keys()) > 0:
             fill(BLACK)
             text('Genre: ', 910, 970)
             text('Rating: ', 905, 1000)
             fill(WHITE)
 
-    movie = back_button(movie)
-
-
-def tv_screen():
-    global tv, pie, bar, comp, scatter, box_plt
-    tv_data = loadTable("data/tv_type_anime.csv", "header")
-    
-    genre_dict = {}
-    genre_rating_dict = {}
-    for row in tv_data.rows():
-
-        name = row.getString('name')
-        genre_list = row.getString('genre').split(', ')
-        eps = row.getInt('episodes')
-        #type = row.getString('type')
-        rating = row.getFloat('rating')
-        mem = row.getInt('members')
-        
-        for genre in genre_list:
-            if genre not in genre_dict:
-                genre_dict[genre] = [0, 0.0]
-                genre_rating_dict[genre] = []
-            genre_dict[genre] = [genre_dict[genre][0]+1, genre_dict[genre][1]+rating]
-            genre_rating_dict[genre].append(rating)
-
-    others = 0
-    o_rating = 0.0
-    k =0
-    for genre, val in genre_dict.items():
-        if val[0] <= 50:
-            others += val[0]
-            o_rating += val[1]
-            k +=1
-            del genre_dict[genre]
-    
-    genre_dict['Others'] = [others, o_rating]
-
-    graph_dict = {}
-    for genre, val in genre_dict.items():
-        graph_dict[genre] = genre_dict[genre][1]/genre_dict[genre][0] - 5
-        genre_dict[genre] = [genre_dict[genre][0], genre_dict[genre][1]/genre_dict[genre][0]]
-    
-    pie = check_box(100, 100, pie)
-    bar = check_box(250, 100, bar)
-    scatter = check_box(410, 100, scatter)
-    box_plt = check_box(590, 100, box_plt)
-    comp = check_box(750, 100, comp)
-
-    fill(BLACK)
-    text('Pie Chart', 130, 125)
-    text('Bar Graph', 280, 125)
-    text('Scatter Plot', 440, 125)
-    text('Box Plot', 620, 125)
-    text('Compare Genre', 780, 125)
-    fill(WHITE)
-
-    if pie:
-        bar = False
-        scatter = False
-        box_plt = False
-        comp = False
-        pie_chart(graph_dict, 500, 600, 100, 200)
-        legand_check_box(1300, 100, graph_dict)
-    if bar:
-        pie = False
-        scatter = False
-        box_plt = False
-        comp = False
-        fill(BLACK)
-        text('Genre: ', 910, 970)
-        text('Rating: ', 905, 1000)
-        fill(WHITE)
-        bar_graph(graph_dict, 200, 1050, 700, 1000, 200, genre_dict)
-    if scatter:
-        pie = False
-        bar = False
-        box_plt = False
-        comp = False
-        scatter_plot(genre_dict, 200, 1000, 1400)
-        legand_check_box(1300, 100, graph_dict)
-        fill(BLACK)
-        line(140, 1030, 1650, 1030)
-        line(140, 1030, 140, 200)
-        text('Genre', 750, 1060)
-        text('Anime\nCount', 40, 550)
-        fill(WHITE)
-    if box_plt:
-        pie = False
-        bar = False
-        scatter = False
-        comp = False
-        box_plot(genre_rating_dict, 80, 1100, 1400)
-        legand_check_box(1300, 60, graph_dict)
-        fill(BLACK)
-        line(70, 1060, 1550, 1060)
-        line(70, 1060, 70, 300)
-        text('Genre', 1450, 1000)
-        text('Rating', 100, 320)
-        fill(WHITE)
-    if comp:
-        pie = False
-        bar = False
-        scatter = False
-        box_plt = False
-        legand_check_box(1300, 100, graph_dict, True)
-        comp_dict = {}
-        clr_lst = []
-        for item in comp_list:
-            comp_dict[item[0]] = graph_dict[item[0]]
-            clr_lst.append(item[1])
-        pie_chart(comp_dict, 400, 400, 100, 100, 200, clr_lst)
-        pie_chart_percent(comp_dict, 1200, 800, 200, clr_lst)
-        bar_graph(comp_dict, 200, 1050, 700, 1000, 200, genre_dict, clr_lst)
-        if len(comp_dict.keys()) > 0:
-            fill(BLACK)
-            text('Genre: ', 910, 970)
-            text('Rating: ', 905, 1000)
-            fill(WHITE)
-
-    tv = back_button(tv)
+    if type == 'tv':
+        tv = back_button(tv)
+    elif type == 'movie':
+        movie = back_button(movie)
 
 def draw():
     background(BGCLR)
@@ -438,6 +358,6 @@ def draw():
         selection_screen()
 
     if movie:
-        movie_screen()
+        screen('movie')
     if tv:
-        tv_screen()
+        screen('tv')
