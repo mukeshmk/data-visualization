@@ -153,7 +153,7 @@ def selection_screen():
     
 
 def movie_screen():
-    global movie, pie, bar
+    global movie, pie, bar, comp, scatter
     movie_data = loadTable("data/movie_type_anime.csv", "header")
     
     genre_dict = {}
@@ -189,11 +189,9 @@ def movie_screen():
         genre_dict[genre] = [genre_dict[genre][0], genre_dict[genre][1]/genre_dict[genre][0]]
     
     pie = check_box(100, 100, pie)
-    fill(BLACK)
-    text('Pie Chart', 130, 125)
-    text('Bar Graph', 280, 125)
-    fill(WHITE)
     bar = check_box(250, 100, bar)
+    scatter = check_box(410, 100, scatter)
+    comp = check_box(590, 100, comp)
     if pie:
         pie_chart(graph_dict, 400, 400, 50, 50)
         legand_check_box(1100, 100, graph_dict, add_val = 0)
@@ -203,7 +201,43 @@ def movie_screen():
         text('Rating: ', 905, 1000)
         fill(WHITE)
         bar_graph(graph_dict, 200, 1000, 700, 1000, 50, genre_dict)
+    if scatter:
+        pie = False
+        bar = False
+        comp = False
+        scatter_plot(genre_dict, 200, 1000, 1400)
+        legand_check_box(1100, 100, graph_dict, add_val = 0)
+        fill(BLACK)
+        line(140, 1030, 1650, 1030)
+        line(140, 1030, 140, 200)
+        text('Genre', 750, 1060)
+        text('Anime\nMovie\nCount', 40, 530)
+        fill(WHITE)
+    if comp:
+        pie = False
+        bar = False
+        scatter = False
+        legand_check_box(1100, 100, graph_dict, True, 0)
+        comp_dict = {}
+        clr_lst = []
+        for item in comp_list:
+            comp_dict[item[0]] = graph_dict[item[0]]
+            clr_lst.append(item[1])
+        pie_chart(comp_dict, 400, 400, 80, 50, 200, clr_lst)
+        pie_chart_percent(comp_dict, 1200, 800, 200, clr_lst)
+        bar_graph(comp_dict, 200, 1050, 700, 1000, 50, genre_dict, clr_lst)
+        if len(comp_dict.keys()) > 0:
+            fill(BLACK)
+            text('Genre: ', 910, 970)
+            text('Rating: ', 905, 1000)
+            fill(WHITE)
 
+    fill(BLACK)
+    text('Pie Chart', 130, 125)
+    text('Bar Graph', 280, 125)
+    text('Scatter Plot', 440, 125)
+    text('Compare Genre', 620, 125)
+    fill(WHITE)
     movie = back_button(movie)
 
 
