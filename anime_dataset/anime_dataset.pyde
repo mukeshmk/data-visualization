@@ -21,10 +21,42 @@ bar = False
 comp = False
 scatter = False
 box_plt = False
+nx = False
 comp_list = set()
+nw_plt = None
 
 def setup():
     fullScreen()
+
+def draw_network_node(x, y, r, a, c, v):
+    x1 = x + (r * cos(a))
+    y1 = y + (r * sin(a))
+    fill(c)
+    circle(x1, y1, v[0])
+    x2 = x1 + (v[0]/2 * cos(radians(270))) - v[0]/2
+    y2 = y1 + (v[0]/2 * sin(radians(270)))
+    x3 = x1 + (v[0]/2 * cos(radians(90))) + v[0]/2
+    y3 = y1 + (v[0]/2 * sin(radians(90)))
+    text(v[1], x2-5, y2)
+    hover_over_legand(x2, y2, x3, y3, [v[1], v[2]])
+    fill(WHITE)
+    return x1, y1
+
+def network_graph(network_data, x, y, r):
+    if nw_plt is None:
+        return
+    min_rat = network_data[nw_plt[0]]['min_rating']
+    max_rat = network_data[nw_plt[0]]['max_rating']
+    min_eps = network_data[nw_plt[0]]['min_eps']
+    max_eps = network_data[nw_plt[0]]['max_eps']
+    count = network_data[nw_plt[0]]['count']
+
+    draw_network_node(x, y, 0, 0, nw_plt[1], [30, nw_plt[0], ''])
+    draw_network_node(x, y, r, radians(0), nw_plt[1], [min_eps, 'Minimum Episodes', min_eps])
+    draw_network_node(x, y, r, radians(72), nw_plt[1], [max_eps/2, 'Maximum Episodes', max_eps])
+    draw_network_node(x, y, r, radians(144), nw_plt[1], [count/2, 'Count', count])
+    draw_network_node(x, y, r, radians(216), nw_plt[1], [min_rat*10, 'Minimum Rating', min_rat])
+    draw_network_node(x, y, r, radians(288), nw_plt[1], [max_rat*10, 'Maximum Rating', max_rat])
 
 def median(sortedLst):
     # assumes a sorted list
@@ -109,7 +141,7 @@ def scatter_plot(data_dict, x, y, w, clr_lst=None):
     fill(WHITE)
 
 def legand_check_box(x, y, genre_dict, enable = False, add_val = 5):
-    global comp_list
+    global comp_list, nw_plt
     i = 0
     j = 0
     s = 25
@@ -123,6 +155,7 @@ def legand_check_box(x, y, genre_dict, enable = False, add_val = 5):
         square(x1, y1, 25)
         if mousePressed and enable:
             if mouseX > x1 and mouseX < x1+s and mouseY > y1 and mouseY < y1+s:
+                nw_plt = (_key, CLR_LIST[i])
                 if (_key, CLR_LIST[i]) in comp_list:
                     comp_list.remove((_key, CLR_LIST[i]))
                 else:
@@ -224,7 +257,7 @@ def selection_screen():
     text('Anime TV Shows', 600+32, 500+22)
 
 def screen(type):
-    global movie, tv, pie, bar, comp, scatter, box_plt
+    global movie, tv, pie, bar, comp, scatter, box_plt, nx
     data = []
     if type == 'tv':
         data = loadTable("data/tv_type_anime.csv", "header")
@@ -235,6 +268,7 @@ def screen(type):
     
     genre_dict = {}
     genre_rating_dict = {}
+    network_data = {}
     for row in data.rows():
 
         name = row.getString('name')
@@ -248,8 +282,30 @@ def screen(type):
             if genre not in genre_dict:
                 genre_dict[genre] = [0, 0.0]
                 genre_rating_dict[genre] = []
+                network_data[genre] = {}
             genre_dict[genre] = [genre_dict[genre][0]+1, genre_dict[genre][1]+rating]
             genre_rating_dict[genre].append(rating)
+            # setup types of network data
+            if 'min_rating' not in network_data[genre]:
+                network_data[genre]['min_rating'] = rating
+            if 'max_rating' not in network_data[genre]:
+                network_data[genre]['max_rating'] = rating
+            if 'min_eps' not in network_data[genre]:
+                network_data[genre]['min_eps'] = eps
+            if 'max_eps' not in network_data[genre]:
+                network_data[genre]['max_eps'] = eps
+            if 'count' not in network_data[genre]:
+                network_data[genre]['count'] = 0
+            # set network data
+            if network_data[genre]['min_rating'] > rating and rating != 0:
+                network_data[genre]['min_rating'] = rating
+            if network_data[genre]['max_rating'] < rating:
+                network_data[genre]['max_rating'] = rating
+            if network_data[genre]['min_eps'] > eps and eps != 0:
+                network_data[genre]['min_eps'] = eps
+            if network_data[genre]['max_eps'] < eps:
+                network_data[genre]['max_eps'] = eps
+            network_data[genre]['count'] +=1
 
     others = 0
     o_rating = 0.0
@@ -282,6 +338,7 @@ def screen(type):
     bar = check_box(250, 100, bar)
     scatter = check_box(410, 100, scatter)
     box_plt = check_box(590, 100, box_plt)
+    nx = check_box(100, 150, nx)
     comp = check_box(750, 100, comp)
 
     fill(BLACK)
@@ -290,6 +347,7 @@ def screen(type):
     text('Scatter Plot', 440, 125)
     text('Box Plot', 620, 125)
     text('Compare Genre', 780, 125)
+    text('Network Graph', 130, 175)
     fill(WHITE)
 
     if pie:
@@ -297,6 +355,7 @@ def screen(type):
         scatter = False
         box_plt = False
         comp = False
+        nx = False
         if type == 'tv':
             pie_chart(graph_dict, 500, 600, 100, 200)
             legand_check_box(1300, 100, graph_dict)
@@ -308,6 +367,7 @@ def screen(type):
         scatter = False
         box_plt = False
         comp = False
+        nx = False
         fill(BLACK)
         text('Hover Over Graph to\nsee Legand Details', 920, 880)
         text('Genre: ', 910, 970)
@@ -322,6 +382,7 @@ def screen(type):
         bar = False
         box_plt = False
         comp = False
+        nx = False
         scatter_plot(genre_dict, 200, 1000, 1400)
         if type == 'tv':
             legand_check_box(1300, 100, graph_dict)
@@ -339,6 +400,7 @@ def screen(type):
         bar = False
         scatter = False
         comp = False
+        nx = False
         if type == 'tv':
             box_plot(genre_rating_dict, 130, 1100, 1400)
             legand_check_box(1300, 60, graph_dict)
@@ -349,11 +411,23 @@ def screen(type):
         text('Genre', 1550, 1000)
         text('Rating', 40, 320)
         fill(WHITE)
+    if nx:
+        pie = False
+        bar = False
+        scatter = False
+        box_plt = False
+        comp = False
+        network_graph(network_data, 500, 500, 300)
+        if type == 'tv':
+            legand_check_box(1300, 100, graph_dict, True)
+        else:
+            legand_check_box(1100, 100, graph_dict, True, add_val = 0)
     if comp:
         pie = False
         bar = False
         scatter = False
         box_plt = False
+        nx = False
         comp_dict = {}
         clr_lst = []
         for item in comp_list:
