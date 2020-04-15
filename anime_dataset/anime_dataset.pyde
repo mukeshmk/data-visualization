@@ -36,14 +36,12 @@ def median(sortedLst):
     else:
         return sortedLst[0: index], sortedLst[index+1: lstLen], (sortedLst[index] + sortedLst[index + 1])/2.0
 
-def draw_blox_plot(x, y, w, val_lst, i):
-    s = 100
-    o = 200
+def draw_blox_plot(x, y, w, s, o, val_lst):
     if 0 in val_lst:
         val_lst =  [e for e in val_lst if e != 0]
     sl = sorted(val_lst)
     if len(val_lst) < 3:
-        return
+        return 100, 0
     sl1, sl2, q2 = median(sl)
     _, _, q1 = median(sl1)
     _, _, q3 = median(sl2)
@@ -56,21 +54,38 @@ def draw_blox_plot(x, y, w, val_lst, i):
     line(x, y - _min*s+o, x + w-10, y - _min*s+o)
     line(x, y - _max*s+o, x + w-10, y - _max*s+o)
     line(x, y - q2*s+o, x + w-10, y - q2*s+o)
+    return _min, _max
 
-def box_plot(data_dict, x, y, w, clr_lst=None):
+def box_plot(data_dict, x, y, w, s=100, o=200, clr_lst=None):
     i = 0
     l = len(data_dict.keys())
+    _min = 100
+    _max = 0
     if clr_lst is None:
         clr_lst = CLR_LIST
     for _key, _val in data_dict.items():
         fill(clr_lst[i])
         x1 = x+(w/l)*i
-        draw_blox_plot(x1, y, w/l, _val, i)
+        _mi, _ma = draw_blox_plot(x1, y, w/l, s, o, _val)
+        if _mi < _min:
+            _min = _mi
+        if _ma > _max:
+            _max = _ma
         i+=1
+    fill(BLACK)
+    line(x-10, y-40, x+1470, y-40)
+    line(x-10, y-40, x-10, y-800)
+    line(x-20, y - _min*s+o, x, y - _min*s+o)
+    line(x-20, y - _max*s+o, x, y - _max*s+o)
+    text(_min, x-120, y - _min*s+o)
+    text(_max, x-120, y - _max*s+o)
+    fill(WHITE)
 
 def scatter_plot(data_dict, x, y, w, clr_lst=None):
     i = 0
     l = len(data_dict.keys())
+    _min = 1000
+    _max = 0
     if clr_lst is None:
         clr_lst = CLR_LIST
     for _key, _val in data_dict.items():
@@ -79,13 +94,28 @@ def scatter_plot(data_dict, x, y, w, clr_lst=None):
         y1 = y - _val[0]/3
         r = _val[1]*10
         circle(x1, y1, r)
+        if _val[0] < _min:
+            _min = _val[0]
+        if _val[0] > _max:
+            _max = _val[0]
         i+=1
+    fill(BLACK)
+    text(_min, x-120, y - _min/3)
+    text(_max, x-120, y - _max/3)
+    line(x-60, y+30, x+1450, y+30)
+    line(x-60, y+30, x-60, y-700)
+    line(x-50, y - _min/3, x-70, y - _min/3)
+    line(x-50, y - _max/3, x-70, y - _max/3)
+    fill(WHITE)
 
 def legand_check_box(x, y, genre_dict, enable = False, add_val = 5):
     global comp_list
     i = 0
     j = 0
     s = 25
+    fill(BLACK)
+    text('Value: ', x, y)
+    fill(WHITE)
     for _key, _val in genre_dict.items():
         fill(CLR_LIST[i])
         x1 = x+(200*j)
@@ -99,7 +129,7 @@ def legand_check_box(x, y, genre_dict, enable = False, add_val = 5):
                     comp_list.add((_key, CLR_LIST[i]))
         fill(BLACK)
         if mouseX > x1 and mouseX < x1+s and mouseY > y1 and mouseY < y1+s:
-            text('Value: ' + str(_val + add_val), x, y)
+            text(str(_val + add_val), x+80, y)
         text(_key, x+(200*j)+30, y+(25*(i+1)) - (275*j)+25)
         fill(WHITE)
         i+=1
@@ -279,6 +309,7 @@ def screen(type):
         box_plt = False
         comp = False
         fill(BLACK)
+        text('Hover Over Graph to\nsee Legand Details', 920, 880)
         text('Genre: ', 910, 970)
         text('Rating: ', 905, 1000)
         fill(WHITE)
@@ -297,8 +328,6 @@ def screen(type):
         else:
             legand_check_box(1100, 100, graph_dict, add_val = 0)
         fill(BLACK)
-        line(140, 1030, 1650, 1030)
-        line(140, 1030, 140, 200)
         text('Genre', 750, 1060)
         if type == 'tv':
             text('Anime\nCount', 40, 550)
@@ -310,16 +339,15 @@ def screen(type):
         bar = False
         scatter = False
         comp = False
-        box_plot(genre_rating_dict, 80, 1100, 1400)
         if type == 'tv':
+            box_plot(genre_rating_dict, 130, 1100, 1400)
             legand_check_box(1300, 60, graph_dict)
         elif type == 'movie':
+            box_plot(genre_rating_dict, 130, 1100, 1400, 80, 100)
             legand_check_box(1330, 60, graph_dict, add_val = 0)
         fill(BLACK)
-        line(70, 1060, 1550, 1060)
-        line(70, 1060, 70, 300)
-        text('Genre', 1450, 1000)
-        text('Rating', 100, 320)
+        text('Genre', 1550, 1000)
+        text('Rating', 40, 320)
         fill(WHITE)
     if comp:
         pie = False
