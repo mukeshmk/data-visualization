@@ -22,6 +22,7 @@ comp = False
 scatter = False
 box_plt = False
 nx = False
+show_mem = False
 comp_list = set()
 nw_plt = None
 
@@ -38,38 +39,65 @@ def draw_network_node(x, y, r, a, c, v):
     x3 = x1 + (v[0]/2 * cos(radians(90))) + v[0]/2
     y3 = y1 + (v[0]/2 * sin(radians(90)))
     fill(BLACK)
-    text(v[1], x3-15, y3+15)
+    text(v[1], x2-50, y3+25)
     hover_over_legand(x2, y2, x3, y3, [v[1], v[2]])
     fill(WHITE)
     return x1 - (v[0]/2 * cos(a)), y1  - (v[0]/2 * sin(a))
 
-def network_graph(network_data, x, y, r):
+def network_graph(network_data, x, y, r, type, mem_info=False):
     if nw_plt is None:
         return
+    i = 0
+    l = 5
+    if mem_info:
+        l = 7
     min_rat = network_data[nw_plt[0]]['min_rating']
     max_rat = network_data[nw_plt[0]]['max_rating']
     min_eps = network_data[nw_plt[0]]['min_eps']
     max_eps = network_data[nw_plt[0]]['max_eps']
     count = network_data[nw_plt[0]]['count']
+    min_mem = network_data[nw_plt[0]]['min_mem']
+    max_mem = network_data[nw_plt[0]]['max_mem']
 
-    xn, yn = draw_network_node(x, y, r, radians(0), nw_plt[1], [min_eps*5, 'Min Episodes', min_eps])
-    line(x, y, xn, yn)
-    m = max_eps
-    if max_eps < min_eps*5:
-        m = max_eps*5
-    if max_eps > r:
-        m = r
-    xn, yn = draw_network_node(x, y, r, radians(72), nw_plt[1], [m, 'Max Episodes', max_eps])
-    line(x, y, xn, yn)
+    if type == 'tv':
+        xn, yn = draw_network_node(x, y, r, radians(360/l*i), nw_plt[1], [min_eps*5, 'Min Episodes', min_eps])
+        line(x, y, xn, yn)
+        i+=1
+        m = max_eps
+        if max_eps < min_eps*5:
+            m = max_eps*5
+        if max_eps > r:
+            m = r
+        xn, yn = draw_network_node(x, y, r, radians(360/l*i), nw_plt[1], [m, 'Max Episodes', max_eps])
+        line(x, y, xn, yn)
+        i+=1
+    if type == 'movie' or mem_info:
+        m = min_mem/10
+        if min_mem < 100:
+            m = min_mem
+        xn, yn = draw_network_node(x, y, r, radians(360/l*i), nw_plt[1], [m, 'Min Members', min_mem])
+        line(x, y, xn, yn)
+        i+=1
+        m = max_mem/1000
+        if m < min_eps:
+            m = m*2
+        if m > r:
+            m = r
+        xn, yn = draw_network_node(x, y, r, radians(360/l*i), nw_plt[1], [m, 'Max Members', max_mem])
+        line(x, y, xn, yn)
+        i+=1
     c = count
     if count > r:
         c = r
-    xn, yn = draw_network_node(x, y, r, radians(144), nw_plt[1], [c, 'Count', count])
+    xn, yn = draw_network_node(x, y, r, radians(360/l*i), nw_plt[1], [min_rat*10, 'Min Rating', min_rat])
     line(x, y, xn, yn)
-    xn, yn = draw_network_node(x, y, r, radians(216), nw_plt[1], [min_rat*10, 'Min Rating', min_rat])
+    i+=1
+    xn, yn = draw_network_node(x, y, r, radians(360/l*i), nw_plt[1], [max_rat*10, 'Max Rating', max_rat])
     line(x, y, xn, yn)
-    xn, yn = draw_network_node(x, y, r, radians(288), nw_plt[1], [max_rat*10, 'Max Rating', max_rat])
+    i+=1
+    xn, yn = draw_network_node(x, y, r, radians(360/l*i), nw_plt[1], [c, 'Count', count])
     line(x, y, xn, yn)
+    i+=1
     draw_network_node(x, y, 0, 0, nw_plt[1], [60, nw_plt[0], ''])
 
 def median(sortedLst):
@@ -271,7 +299,7 @@ def selection_screen():
     text('Anime TV Shows', 600+32, 500+22)
 
 def screen(type):
-    global movie, tv, pie, bar, comp, scatter, box_plt, nx
+    global movie, tv, pie, bar, comp, scatter, box_plt, nx, show_mem
     data = []
     if type == 'tv':
         data = loadTable("data/tv_type_anime.csv", "header")
@@ -310,6 +338,10 @@ def screen(type):
                 network_data[genre]['max_eps'] = eps
             if 'count' not in network_data[genre]:
                 network_data[genre]['count'] = 0
+            if 'min_mem' not in network_data[genre]:
+                network_data[genre]['min_mem'] = mem
+            if 'max_mem' not in network_data[genre]:
+                network_data[genre]['max_mem'] = mem
             # set network data
             if network_data[genre]['min_rating'] > rating and rating != 0:
                 network_data[genre]['min_rating'] = rating
@@ -319,6 +351,10 @@ def screen(type):
                 network_data[genre]['min_eps'] = eps
             if network_data[genre]['max_eps'] < eps:
                 network_data[genre]['max_eps'] = eps
+            if network_data[genre]['min_mem'] > mem and mem != 0:
+                network_data[genre]['min_mem'] = mem
+            if network_data[genre]['max_mem'] < mem:
+                network_data[genre]['max_mem'] = mem
             network_data[genre]['count'] +=1
 
     others = 0
@@ -431,10 +467,15 @@ def screen(type):
         scatter = False
         box_plt = False
         comp = False
-        network_graph(network_data, 600, 600, 300)
         if type == 'tv':
+            show_mem = check_box(1300, 450, show_mem)
+            fill(BLACK)
+            text('Show Member Nodes', 1330, 475)
+            fill(WHITE)
+            network_graph(network_data, 600, 600, 300, type, show_mem)
             legand_check_box(1300, 100, graph_dict, True)
         else:
+            network_graph(network_data, 600, 600, 300, type)
             legand_check_box(1100, 100, graph_dict, True, add_val = 0)
     if comp:
         pie = False
