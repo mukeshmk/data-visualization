@@ -37,10 +37,11 @@ def draw_network_node(x, y, r, a, c, v):
     y2 = y1 + (v[0]/2 * sin(radians(270)))
     x3 = x1 + (v[0]/2 * cos(radians(90))) + v[0]/2
     y3 = y1 + (v[0]/2 * sin(radians(90)))
-    text(v[1], x2-5, y2)
+    fill(BLACK)
+    text(v[1], x3-15, y3+15)
     hover_over_legand(x2, y2, x3, y3, [v[1], v[2]])
     fill(WHITE)
-    return x1, y1
+    return x1 - (v[0]/2 * cos(a)), y1  - (v[0]/2 * sin(a))
 
 def network_graph(network_data, x, y, r):
     if nw_plt is None:
@@ -51,12 +52,25 @@ def network_graph(network_data, x, y, r):
     max_eps = network_data[nw_plt[0]]['max_eps']
     count = network_data[nw_plt[0]]['count']
 
-    draw_network_node(x, y, 0, 0, nw_plt[1], [30, nw_plt[0], ''])
-    draw_network_node(x, y, r, radians(0), nw_plt[1], [min_eps, 'Minimum Episodes', min_eps])
-    draw_network_node(x, y, r, radians(72), nw_plt[1], [max_eps/2, 'Maximum Episodes', max_eps])
-    draw_network_node(x, y, r, radians(144), nw_plt[1], [count/2, 'Count', count])
-    draw_network_node(x, y, r, radians(216), nw_plt[1], [min_rat*10, 'Minimum Rating', min_rat])
-    draw_network_node(x, y, r, radians(288), nw_plt[1], [max_rat*10, 'Maximum Rating', max_rat])
+    xn, yn = draw_network_node(x, y, r, radians(0), nw_plt[1], [min_eps*5, 'Min Episodes', min_eps])
+    line(x, y, xn, yn)
+    m = max_eps
+    if max_eps < min_eps*5:
+        m = max_eps*5
+    if max_eps > r:
+        m = r
+    xn, yn = draw_network_node(x, y, r, radians(72), nw_plt[1], [m, 'Max Episodes', max_eps])
+    line(x, y, xn, yn)
+    c = count
+    if count > r:
+        c = r
+    xn, yn = draw_network_node(x, y, r, radians(144), nw_plt[1], [c, 'Count', count])
+    line(x, y, xn, yn)
+    xn, yn = draw_network_node(x, y, r, radians(216), nw_plt[1], [min_rat*10, 'Min Rating', min_rat])
+    line(x, y, xn, yn)
+    xn, yn = draw_network_node(x, y, r, radians(288), nw_plt[1], [max_rat*10, 'Max Rating', max_rat])
+    line(x, y, xn, yn)
+    draw_network_node(x, y, 0, 0, nw_plt[1], [60, nw_plt[0], ''])
 
 def median(sortedLst):
     # assumes a sorted list
@@ -417,7 +431,7 @@ def screen(type):
         scatter = False
         box_plt = False
         comp = False
-        network_graph(network_data, 500, 500, 300)
+        network_graph(network_data, 600, 600, 300)
         if type == 'tv':
             legand_check_box(1300, 100, graph_dict, True)
         else:
