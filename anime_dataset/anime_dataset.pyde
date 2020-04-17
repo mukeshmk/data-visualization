@@ -452,6 +452,7 @@ def screen(type):
         text('that genre.', tx, ty + ts*9)
         text('This is a derived data which doesn\'t exists as', tx, ty + ts*11)
         text('part of the dataset and is calulated from the data.', tx, ty + ts*12)
+        text('Anime Genre VS Genre avg. Rating', 300, 1000)
     if bar:
         pie = False
         scatter = False
@@ -489,6 +490,7 @@ def screen(type):
         text('that genre.', tx, ty + ts*9)
         text('This is a derived data which doesn\'t exists as', tx, ty + ts*11)
         text('part of the dataset and is calulated from the data.', tx, ty + ts*12)
+        text('Anime Genre VS Genre avg. Rating', 300, 300)
     if scatter:
         pie = False
         bar = False
@@ -508,6 +510,8 @@ def screen(type):
             text('Anime\nMovie\nCount', 40, 530)
         textSize(50)
         text('Hover over the LEGEND boxes\nabove to see the avg rating', tx-120, ty - ts)
+        textSize(25)
+        text('Count of Anime in each Genre VS Genre\n(radius of circle represents avg. rating)', 300, 250)
         fill(WHITE)
     if box_plt:
         pie = False
@@ -525,6 +529,7 @@ def screen(type):
         text('Genre', 1550, 1000)
         text('Rating', 40, 320)
         text('Hover over the LEGEND boxes\nabove to see the avg rating', tx+ts*8, ty - ts*2)
+        text('Anime Genre VS Genre avg. Rating', 300, 300)
         fill(WHITE)
     if nx:
         pie = False
@@ -581,6 +586,8 @@ def screen(type):
         textSize(ts)
         text('Click on Genres in the LEGEND boxes to', tx, ty + ts*4)
         text('start comparing genres via graphs.', tx, ty + ts*5)
+        textSize(25)
+        text('Anime Genre VS Genre avg. Rating', 300, 250)
 
     if type == 'tv':
         tv = back_button(tv)
