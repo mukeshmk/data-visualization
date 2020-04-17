@@ -23,6 +23,7 @@ scatter = False
 box_plt = False
 nx = False
 show_mem = False
+bar_zoom = False
 comp_list = set()
 nw_plt = None
 
@@ -290,16 +291,32 @@ def back_button(val):
 
 def selection_screen():
     global movie, tv
-    movie = check_box(600, 400, movie)
-    tv = check_box(600, 500, tv)
 
-    textSize(25)
-    fill(BLACK)
-    text('Anime Movie', 600+32, 400+22)
-    text('Anime TV Shows', 600+32, 500+22)
+    fill('#a100e6')
+    textSize(150)
+    text('OtakuHub', 550, 200)
+    fill('#ba1aff')
+    textSize(100)
+    text('Anime Stats for an Otaku', 350, 350)
+    fill('#ca4dff')
+    textSize(50)
+    text('Get Stats about: ', 450, 650)
+
+    movie = check_box(900, 620, movie)
+    tv = check_box(1050, 620, tv)
+    textSize(30)
+    text('Movies', 900+32, 620+22)
+    text('TV Shows', 1050+32, 620+22)
+
+    fill('#590080')
+    text('Anime Dataset Visualisation: A Project for CS7DS4 - DATA VISUALISATION', 400, 1000)
+    text('By: Mukesh Arambakam - 19301497', 650, 1050)
 
 def screen(type):
-    global movie, tv, pie, bar, comp, scatter, box_plt, nx, show_mem
+    global movie, tv, pie, bar, comp, scatter, box_plt, nx, show_mem, bar_zoom
+    tx = 1300
+    ty = 500
+    ts = 30
     data = []
     if type == 'tv':
         data = loadTable("data/tv_type_anime.csv", "header")
@@ -406,27 +423,72 @@ def screen(type):
         box_plt = False
         comp = False
         nx = False
+        bar_zoom = check_box(920, 900, bar_zoom)
+        z = 1
+        if bar_zoom:
+            z = 1.5
+        else:
+            z = 1
         if type == 'tv':
-            pie_chart(graph_dict, 500, 600, 100, 200)
+            pie_chart(graph_dict, 500, 600, 150, 200*z)
             legand_check_box(1300, 100, graph_dict)
         elif type == 'movie':
-            pie_chart(graph_dict, 400, 400, 50, 50)
+            pie_chart(graph_dict, 500, 600, 75, 60*z)
             legand_check_box(1100, 100, graph_dict, add_val = 0)
+        fill(BLACK)
+        text('Click to toggle Zoom', 920+40, 900+25)
+        textSize(50)
+        text('Hover over the LEGEND boxes\nabove to see the avg rating', tx-120, ty - ts)
+        textSize(ts-5)
+        text('The Pie Chart Represents various genres of', tx, ty + ts*5)
+        txt = ''
+        if type == 'tv':
+            txt = 'TV Shows'
+        elif type == 'movie':
+            txt = 'Movies'
+        text('Anime ' + txt + ', where each coloured segment', tx, ty + ts*6)
+        text('represents a particular genre and the radius of', tx, ty + ts*7)
+        text('each segment represents the avegrage rating of', tx, ty + ts*8)
+        text('that genre.', tx, ty + ts*9)
+        text('This is a derived data which doesn\'t exists as', tx, ty + ts*11)
+        text('part of the dataset and is calulated from the data.', tx, ty + ts*12)
     if bar:
         pie = False
         scatter = False
         box_plt = False
         comp = False
         nx = False
+        bar_zoom = check_box(920, 900, bar_zoom)
+        z = 1
+        if bar_zoom:
+            z = 1.5
+        else:
+            z = 1
         fill(BLACK)
-        text('Hover Over Graph to\nsee Legand Details', 920, 880)
+        text('Click to toggle Zoom', 920+40, 900+25)
         text('Genre: ', 910, 970)
         text('Rating: ', 905, 1000)
         fill(WHITE)
         if type == 'tv':
-            bar_graph(graph_dict, 200, 1050, 700, 1000, 200, genre_dict)
+            bar_graph(graph_dict, 200, 1050, 700, 1000, 200*z, genre_dict)
         elif type == 'movie':
-            bar_graph(graph_dict, 200, 1000, 700, 1000, 50, genre_dict)
+            bar_graph(graph_dict, 200, 1000, 700, 1000, 60*z, genre_dict)
+        fill(BLACK)
+        textSize(50)
+        text('Hover over the GRAPH\'s bars\nto see the avg rating and genre', tx-150, ty - ts)
+        textSize(ts-5)
+        text('The Bar Graph Represents various genres of', tx, ty + ts*5)
+        txt = ''
+        if type == 'tv':
+            txt = 'TV Shows'
+        elif type == 'movie':
+            txt = 'Movies'
+        text('Anime ' + txt + ', where each coloured bar', tx, ty + ts*6)
+        text('represents a particular genre and the height of', tx, ty + ts*7)
+        text('each bar represents the avegrage rating of', tx, ty + ts*8)
+        text('that genre.', tx, ty + ts*9)
+        text('This is a derived data which doesn\'t exists as', tx, ty + ts*11)
+        text('part of the dataset and is calulated from the data.', tx, ty + ts*12)
     if scatter:
         pie = False
         bar = False
@@ -444,6 +506,8 @@ def screen(type):
             text('Anime\nCount', 40, 550)
         elif type == 'movie':
             text('Anime\nMovie\nCount', 40, 530)
+        textSize(50)
+        text('Hover over the LEGEND boxes\nabove to see the avg rating', tx-120, ty - ts)
         fill(WHITE)
     if box_plt:
         pie = False
@@ -460,6 +524,7 @@ def screen(type):
         fill(BLACK)
         text('Genre', 1550, 1000)
         text('Rating', 40, 320)
+        text('Hover over the LEGEND boxes\nabove to see the avg rating', tx+ts*8, ty - ts*2)
         fill(WHITE)
     if nx:
         pie = False
@@ -477,6 +542,14 @@ def screen(type):
         else:
             network_graph(network_data, 600, 600, 300, type)
             legand_check_box(1100, 100, graph_dict, True, add_val = 0)
+        fill(BLACK)
+        textSize(50)
+        text('Hover over the LEGEND boxes\nabove to see the avg rating', tx-120, ty - ts + 100)
+        textSize(ts)
+        text('Click on Genre in the LEGEND boxes to', tx, ty + ts*7)
+        text('see the Network Graph for that genre.', tx, ty + ts*8)
+        text('Hover the Graph\'s nodes to see', tx, ty + ts*10)
+        text('the details of the node', tx, ty + ts*11)
     if comp:
         pie = False
         bar = False
@@ -502,6 +575,12 @@ def screen(type):
             text('Genre: ', 910, 970)
             text('Rating: ', 905, 1000)
             fill(WHITE)
+        fill(BLACK)
+        textSize(50)
+        text('Hover over the LEGEND boxes\nabove to see the avg rating', tx-120, ty - ts)
+        textSize(ts)
+        text('Click on Genres in the LEGEND boxes to', tx, ty + ts*4)
+        text('start comparing genres via graphs.', tx, ty + ts*5)
 
     if type == 'tv':
         tv = back_button(tv)
