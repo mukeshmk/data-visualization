@@ -37,12 +37,12 @@
 
 
 \section{Introduction}
-    Exploratory Visualization has been used to analyse and represent the anime dataset where new features were derived from existing features to gain new knowledge about the data.
+    Exploratory Visualization has been used to analyse and represent the Anime Recommendation Dataset where new features were derived from existing features to gain new knowledge about the data.
 
 \section{About the Dataset}
     \qquad The dataset used for this visualisation is an \textbf{Anime Recommendations Database} \cite{anime-dataset}. This data set contains information on user preference data from 73,516 users on 12,294 anime, but only a part of the dataset has been used to visualise. The raw dataset was preprocessed to generated data required for visualisation -information about Anime "TV Shows" and "Movies" have been filtered, aggregated and rendered using the tool \textbf{\textit{Processing.py}}. 
     
-    \qquad The visualisation fits into the category of \textbf{Exploratory Data Visualization} (analyst centric), where new data is derived from the existing once. The dataset consists of information like, Anime Name, Genre (an anime can belong to more than one genre), type (movie, tv show, ova, etc.) rating, members and episodes. From this, information about \textbf{each genre} ('per-genre' data) is derived which are as follows.
+    \qquad The visualisation fits into the category of \textbf{Exploratory Data Visualization} (Analyst Centric), where new data is derived from the existing once's. The dataset consists of information like, Anime Name, Genre (an anime can belong to more than one genre), type (Movie, TV show, OVA, etc.) rating, members and episodes. From this, information about \textbf{each genre} ('per-genre' data) is derived which are as follows.
     \begin{itemize}
     \item Average Rating
     \item Minimum and Maximum Rating.
@@ -53,7 +53,7 @@
     \qquad This information has been calculated on data load. These stats are stored using a dictionary (map in python), in the case of per genre average rating: key in the genre and the value is the list of all the ratings of anime that belong to this genre and the average is calculated, which is the average rating for that genre. Similarly other derived has been calculated.
     
 \section{Exploratory Data Visualization}
-    \qquad Exploratory Data Visualization (EDV) is an approach to analyzing data sets to summarize their main characteristics using visual methods. Here EDV is used to find new knowledge about how anime genre compare with each other in terms of minimum, maximum and average values for rating, episodes and anime count in each genre. To represent this derived information various methods have been used, like:
+    \qquad Exploratory Data Visualization (\textbf{EDV}) is an approach to analyzing data sets to summarize their main characteristics using visual methods. Here EDV is used to find new knowledge about how anime genre compare with each other in terms of minimum, maximum and average values for rating, episodes and anime count in each genre. To represent this derived information various methods have been used, like:
     \begin{enumerate}
         \item Pie Charts
         \item Bar Graphs
@@ -61,7 +61,7 @@
         \item Box Plots
         \item Network Graphs
     \end{enumerate}
-    \qquad Apart from representing information in this format for both Anime "TV Shows" and "Movies", a option to compare this derived information has also been provided via means of a bar chart and 2 types of pie charts (radial and area pie charts).
+    \qquad Apart from representing information in this format for both Anime \textbf{TV Shows} and \textbf{Movies}, a option to compare this derived information has also been provided via means of a bar chart and 2 types of pie charts (radial and area pie charts).
     
 \section{Visualisation Analysis}
     \subsection{Data Types:}
@@ -81,12 +81,15 @@
         \item \textbf{Size:} In case of pie chart: the area (size) of the arc was used to represent the percentage of anime in each genre, In Bar Graph: the height of the bar was used to depict the average rating of the genre, where in case of scatter plot, the radius of the circle was also used to represent the average rating per-genre.
         \item \textbf{Colour:} Here, a unique colour was used to represent a particular genre throughout all the graphs.
     \end{enumerate}
-    \subsection{Results:}
 \section{Technical Details:}
-\qquad Processing.py was used to visualize the data. No additional libraries or tools were used apart from the what is available by default via processing. The code for this project can be found on my github repo\footnote{https://github.com/mukeshmk/data-visualization} under the folder \href{https://github.com/mukeshmk/data-visualization/tree/master/otaku_hub}{data-visualization/otaku\_hub}
+\qquad \textbf{Processing.py} was used to visualize the data. No additional libraries or tools were used apart from the what is available by default via processing. The code for this project can be found on my \textbf{GitHub repo}\footnote{https://github.com/mukeshmk/data-visualization} under the folder \href{https://github.com/mukeshmk/data-visualization/tree/master/otaku_hub}{data-visualization/otaku\_hub}
 
-\qquad All graphs/plots created for this representation are written in a generic way so that it can be reused to fit any dataset of any size. Given the x and y coordinates, 2 scales (one for generic scaling and another for offset in case of outliers) and the list of values, as the bare minimum parameters the functions are designed to plot the graphs dynamically. This feature has been showcased under the "Compare Genre" feature of the visualisation, where in a user can select what genres he/she wants to compare.
+\qquad All graphs/plots created for this visualisation were written in a generic way so that it can be reused to fit any dataset of any size. Given the x and y coordinates, 2 scales (one for generic scaling and another for offset in case of outliers) and the data, as the bare minimum parameters, the visualisation functions were designed to plot the graphs dynamically. This feature has been showcased under the \textbf{Compare Genre} functionality of the visualisation, where in a user can select what genres he/she wants to compare.
 
+\section{Results:}
+\qquad The novelty of this visualisation lies in derived data and the new knowledge obtained through the visualisation of the said data. With this visualisation we learn that in TV Shows, the "Physiological" anime genre has the highest rating with 7.53 whereas "Music" has the lowest with a rating of 6.22. In terms of anime count, the "Comedy" genre has the highest with 1870 and "Samurai" genre with the lowest with 51. Other information like episode count per genre, and similar information for Movie type of anime can also be obtained, which otherwise would have been impossible to directly infer from the raw dataset.
+
+\qquad The \textbf{strengths} of this visualisation lies in how it is able to obtain, visualise and compare the new knowledge obtained, which in-turn leads to information being obtained in terms of comparison data between multiple genres. It's \textbf{weakness} lies in the amount of data that has to be processed and visualised as the number of anime increases (the raw data) the data that it has to preprocess to obtain data that is to be visualised increases which results in performance issues, and as more genre become significant in the future the shear amount of data to be visualised will increased which leads to a sense of clutterness, this could be avoided by improving the visualisation techniques or the tool used. 
 
 % feel free to use bibtex
 \begin{thebibliography}{9}
