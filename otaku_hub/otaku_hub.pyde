@@ -240,6 +240,9 @@ def pie_chart_percent(data_dict, x, y, s1, clr_lst=None):
         arc(x, y, s1, s1, deg, deg + (_val/tot_val)*radians(360), PIE)
         deg += (_val/tot_val)*radians(360)
         i+=1
+    fill(WHITE)
+    if inc > 0:
+        circle(x, y, 100)
 
 def hover_over_legand(x1, y1, x2, y2, legand):
     if mouseX > x1 and mouseX < x2 and mouseY > y1 and mouseY < y2:
@@ -436,7 +439,7 @@ def screen(type):
             pie_chart(graph_dict, 500, 600, 75, 60*z)
             legand_check_box(1100, 100, graph_dict, add_val = 0)
         fill(BLACK)
-        text('Click to toggle Zoom', 920+40, 900+25)
+        text('Click to toggle Scale', 920+40, 900+25)
         textSize(50)
         text('Hover over the LEGEND boxes\nabove to see the avg rating', tx-120, ty - ts)
         textSize(ts-5)
@@ -466,7 +469,7 @@ def screen(type):
         else:
             z = 1
         fill(BLACK)
-        text('Click to toggle Zoom', 920+40, 900+25)
+        text('Click to toggle Scale', 920+40, 900+25)
         text('Genre: ', 910, 970)
         text('Rating: ', 905, 1000)
         fill(WHITE)
