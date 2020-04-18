@@ -448,10 +448,10 @@ def screen(type):
             txt = 'Movies'
         text('Anime ' + txt + ', where each coloured segment', tx, ty + ts*6)
         text('represents a particular genre and the radius of', tx, ty + ts*7)
-        text('each segment represents the avegrage rating of', tx, ty + ts*8)
+        text('each segment represents the average rating of', tx, ty + ts*8)
         text('that genre.', tx, ty + ts*9)
         text('This is a derived data which doesn\'t exists as', tx, ty + ts*11)
-        text('part of the dataset and is calulated from the data.', tx, ty + ts*12)
+        text('part of the dataset and is calculated from the data.', tx, ty + ts*12)
         text('Anime Genre VS Genre avg. Rating', 300, 1000)
     if bar:
         pie = False
@@ -486,10 +486,10 @@ def screen(type):
             txt = 'Movies'
         text('Anime ' + txt + ', where each coloured bar', tx, ty + ts*6)
         text('represents a particular genre and the height of', tx, ty + ts*7)
-        text('each bar represents the avegrage rating of', tx, ty + ts*8)
+        text('each bar represents the average rating of', tx, ty + ts*8)
         text('that genre.', tx, ty + ts*9)
         text('This is a derived data which doesn\'t exists as', tx, ty + ts*11)
-        text('part of the dataset and is calulated from the data.', tx, ty + ts*12)
+        text('part of the dataset and is calculated from the data.', tx, ty + ts*12)
         text('Anime Genre VS Genre avg. Rating', 300, 300)
     if scatter:
         pie = False
