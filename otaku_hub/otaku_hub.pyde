@@ -19,7 +19,7 @@ tv = False
 pie = True
 bar = False
 comp = False
-scatter = False
+bubble = False
 box_plt = False
 nx = False
 show_mem = False
@@ -156,7 +156,7 @@ def box_plot(data_dict, x, y, w, s=100, o=200, clr_lst=None):
     text(_max, x-120, y - _max*s+o)
     fill(WHITE)
 
-def scatter_plot(data_dict, x, y, w, clr_lst=None):
+def bubble_chart(data_dict, x, y, w, clr_lst=None):
     i = 0
     l = len(data_dict.keys())
     _min = 1000
@@ -316,7 +316,7 @@ def selection_screen():
     text('By: Mukesh Arambakam - 19301497', 650, 1050)
 
 def screen(type):
-    global movie, tv, pie, bar, comp, scatter, box_plt, nx, show_mem, bar_zoom
+    global movie, tv, pie, bar, comp, bubble, box_plt, nx, show_mem, bar_zoom
     tx = 1300
     ty = 500
     ts = 30
@@ -406,23 +406,23 @@ def screen(type):
     
     pie = check_box(100, 100, pie)
     bar = check_box(250, 100, bar)
-    scatter = check_box(410, 100, scatter)
-    box_plt = check_box(590, 100, box_plt)
+    bubble = check_box(410, 100, bubble)
+    box_plt = check_box(605, 100, box_plt)
     nx = check_box(100, 150, nx)
     comp = check_box(750, 100, comp)
 
     fill(BLACK)
     text('Pie Chart', 130, 125)
     text('Bar Graph', 280, 125)
-    text('Scatter Plot', 440, 125)
-    text('Box Plot', 620, 125)
+    text('Bubble Chart', 440, 125)
+    text('Box Plot', 635, 125)
     text('Compare Genre', 780, 125)
     text('Network Graph', 130, 175)
     fill(WHITE)
 
     if pie:
         bar = False
-        scatter = False
+        bubble = False
         box_plt = False
         comp = False
         nx = False
@@ -458,7 +458,7 @@ def screen(type):
         text('Anime Genre VS Genre avg. Rating', 300, 1000)
     if bar:
         pie = False
-        scatter = False
+        bubble = False
         box_plt = False
         comp = False
         nx = False
@@ -494,13 +494,13 @@ def screen(type):
         text('This is a derived data which doesn\'t exists as', tx, ty + ts*11)
         text('part of the dataset and is calculated from the data.', tx, ty + ts*12)
         text('Anime Genre VS Genre avg. Rating', 300, 300)
-    if scatter:
+    if bubble:
         pie = False
         bar = False
         box_plt = False
         comp = False
         nx = False
-        scatter_plot(genre_dict, 200, 1000, 1400)
+        bubble_chart(genre_dict, 200, 1000, 1400)
         if type == 'tv':
             legand_check_box(1300, 100, graph_dict)
         else:
@@ -519,7 +519,7 @@ def screen(type):
     if box_plt:
         pie = False
         bar = False
-        scatter = False
+        bubble = False
         comp = False
         nx = False
         if type == 'tv':
@@ -537,7 +537,7 @@ def screen(type):
     if nx:
         pie = False
         bar = False
-        scatter = False
+        bubble = False
         box_plt = False
         comp = False
         if type == 'tv':
@@ -561,7 +561,7 @@ def screen(type):
     if comp:
         pie = False
         bar = False
-        scatter = False
+        bubble = False
         box_plt = False
         nx = False
         comp_dict = {}

@@ -37,7 +37,7 @@
 
 
 \section{Introduction}
-    Exploratory Visualization has been used to analyse and represent the Anime Recommendation Dataset where new features were derived from existing features to gain new knowledge about the data.
+    \qquad Exploratory Visualization has been used to analyse and represent the Anime Recommendation Dataset where new features were derived from existing features to gain new knowledge about the data which otherwise would have been impossible to infer from the raw dataset. This knowledge helped in visualising and comparing data, which resulted derived information, which can be used by content creators to create new anime to increase there revenue and also by general public to find what genre of anime have the highest rating, which in a way helps them choose what anime to watch next.
 
 \section{About the Dataset}
     \qquad The dataset used for this visualisation is an \textbf{Anime Recommendations Database} \cite{anime-dataset}. This data set contains information on user preference data from 73,516 users on 12,294 anime, but only a part of the dataset has been used to visualise. The raw dataset was preprocessed to generated data required for visualisation -information about Anime "TV Shows" and "Movies" have been filtered, aggregated and rendered using the tool \textbf{\textit{Processing.py}}. 
@@ -57,8 +57,8 @@
     \begin{enumerate}
         \item Pie Charts
         \item Bar Graphs
-        \item Scatter Plots
-        \item Box Plots
+        \item Bubble Charts \cite{bubble-chart}
+        \item Box Plots \cite{box-plot}
         \item Network Graphs
     \end{enumerate}
     \qquad Apart from representing information in this format for both Anime \textbf{TV Shows} and \textbf{Movies}, a option to compare this derived information has also been provided via means of a bar chart and 2 types of pie charts (radial and area pie charts).
@@ -76,25 +76,33 @@
     \subsection{Visual Encoding Channels:}
     \qquad Various visual encoding channels were used to represent the derived data, like:
     \begin{enumerate}
-        \item \textbf{Position:} In the case of scatter plot, position of the circles along the y-axis was used to represent anime count in that genre, where in case of box plot position of the box along the y-axis was used to represent average rating.
-        \item \textbf{Mark:} The Circles, Boxes and Bars were used to represent different types of data in the across scatter plot, box plots and bar graphs respectively.
-        \item \textbf{Size:} In case of pie chart: the area (size) of the arc was used to represent the percentage of anime in each genre, In Bar Graph: the height of the bar was used to depict the average rating of the genre, where in case of scatter plot, the radius of the circle was also used to represent the average rating per-genre.
+        \item \textbf{Position:} In the case of bubble chart, position of the circles along the y-axis was used to represent anime count in that genre, where in case of box plot position of the box along the y-axis was used to represent average rating.
+        \item \textbf{Mark:} The Circles, Boxes and Bars were used to represent different types of data in the across bubble chart, box plots and bar graphs respectively.
+        \item \textbf{Size:} In case of pie chart: the area (size) of the arc was used to represent the percentage of anime in each genre, In Bar Graph: the height of the bar was used to depict the average rating of the genre, where in case of bubble chart, the radius of the circle was also used to represent the average rating per-genre.
         \item \textbf{Colour:} Here, a unique colour was used to represent a particular genre throughout all the graphs.
     \end{enumerate}
 \section{Technical Details:}
-\qquad \textbf{Processing.py} was used to visualize the data. No additional libraries or tools were used apart from the what is available by default via processing. The code for this project can be found on my \textbf{GitHub repo}\footnote{https://github.com/mukeshmk/data-visualization} under the folder \href{https://github.com/mukeshmk/data-visualization/tree/master/otaku_hub}{data-visualization/otaku\_hub}
+    \qquad \textbf{Processing.py} was used to visualize the data. No additional libraries or tools were used apart from the what is available by default via processing. The code for this project can be found on my \textbf{GitHub repo}\footnote{https://github.com/mukeshmk/data-visualization} under the folder \href{https://github.com/mukeshmk/data-visualization/tree/master/otaku_hub}{data-visualization/otaku\_hub}
 
-\qquad All graphs/plots created for this visualisation were written in a generic way so that it can be reused to fit any dataset of any size. Given the x and y coordinates, 2 scales (one for generic scaling and another for offset in case of outliers) and the data, as the bare minimum parameters, the visualisation functions were designed to plot the graphs dynamically. This feature has been showcased under the \textbf{Compare Genre} functionality of the visualisation, where in a user can select what genres he/she wants to compare.
+    \qquad All graphs/plots created for this visualisation were written in a generic way so that it can be reused to fit any dataset of any size. Given the x and y coordinates, 2 scales (one for generic scaling and another for offset in case of outliers) and the data, as the bare minimum parameters, the visualisation functions were designed to plot the graphs dynamically. This feature has been showcased under the \textbf{Compare Genre} functionality of the visualisation, where in a user can select what genres he/she wants to compare.
 
 \section{Results:}
-\qquad The novelty of this visualisation lies in derived data and the new knowledge obtained through the visualisation of the said data. With this visualisation we learn that in TV Shows, the "Physiological" anime genre has the highest rating with 7.53 whereas "Music" has the lowest with a rating of 6.22. In terms of anime count, the "Comedy" genre has the highest with 1870 and "Samurai" genre with the lowest with 51. Other information like episode count per genre, and similar information for Movie type of anime can also be obtained, which otherwise would have been impossible to directly infer from the raw dataset.
+    \qquad The novelty of this visualisation lies in derived data and the new knowledge obtained through the visualisation of the said data. With this visualisation we learn that in TV Shows, the "Physiological" anime genre has the highest rating with 7.53 whereas "Music" has the lowest with a rating of 6.22. In terms of anime count, the "Comedy" genre has the highest with 1870 and "Samurai" genre with the lowest with 51. Other information like episode count per genre, and similar information for Movie type of anime can also be obtained, which otherwise would have been impossible to directly infer from the raw dataset.
 
-\qquad The \textbf{strengths} of this visualisation lies in how it is able to obtain, visualise and compare the new knowledge obtained, which in-turn leads to information being obtained in terms of comparison data between multiple genres. It's \textbf{weakness} lies in the amount of data that has to be processed and visualised as the number of anime increases (the raw data) the data that it has to preprocess to obtain data that is to be visualised increases which results in performance issues, and as more genre become significant in the future the shear amount of data to be visualised will increased which leads to a sense of clutterness, this could be avoided by improving the visualisation techniques or the tool used. 
+    \qquad The \textbf{strengths} of this visualisation lies in how it is able to obtain, visualise and compare the new knowledge obtained, which in-turn leads to information being obtained in terms of comparison data between multiple genres. This visualisation will help content creators to select what genre of Anime they should create which would be well received by viewers, which could result in better ratings for there newly created anime and also by general public to decide on what genre of anime to watch next based on the avegrage rating of genres.
+    
+    \qquad It's \textbf{weakness} lies in the amount of data that has to be processed and visualised as the number of anime increases (the raw data) the data that it has to preprocess to obtain data that is to be visualised increases which results in performance issues, and as more genre become significant in the future the shear amount of data to be visualised will increased which leads to a sense of clutterness, this could be avoided by improving the visualisation techniques or the tool used. 
 
 % feel free to use bibtex
 \begin{thebibliography}{9}
 \bibitem{anime-dataset} 
 Kaggle.com. 2020. Anime Recommendations Database. [online] Available at: <https://www.kaggle.com/CooperUnion/anime-recommendations-database> [Accessed 17 April 2020].
+
+\bibitem{bubble-chart}
+Google Developers. 2020. Visualization: Bubble Chart  |  Charts  |  Google Developers. [online] Available at: <https://developers.google.com/chart/interactive/docs/gallery/bubblechart> [Accessed 18 April 2020].
+
+\bibitem{box-plot}
+Galarnyk, M., 2020. Understanding Boxplots. [online] Medium. Available at: <https://towardsdatascience.com/understanding-boxplots-5e2df7bcbd51> [Accessed 18 April 2020].
 
 \end{thebibliography}
 \end{document}
