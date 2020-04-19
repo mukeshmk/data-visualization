@@ -304,7 +304,7 @@ def selection_screen():
     fill('#b53a4e')
     textSize(150)
     text('OtakuHub', 1150, 200)
-    fill('#788372')
+    fill('#669966')
     textSize(100)
     text('Anime Stats for an Otaku', 650, 350)
     fill('#f5dbc4')
