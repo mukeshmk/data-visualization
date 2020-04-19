@@ -31,7 +31,7 @@ img = None
 
 def setup():
     global img
-    img = loadImage("hisoka.jpg")
+    img = loadImage("kakashi.png")
     fullScreen()
 
 def draw_network_node(x, y, r, a, c, v):
@@ -298,28 +298,28 @@ def back_button(val):
 
 def selection_screen():
     global movie, tv
-    background('#4f247d')
-    image(img, width/2-150, height/2-90)
+    background('#605354')
+    image(img, 0-20, 0)
 
-    fill('#67ae9c')
+    fill('#b53a4e')
     textSize(150)
-    text('OtakuHub', 550, 200)
-    fill('#ff666b')
+    text('OtakuHub', 1150, 200)
+    fill('#788372')
     textSize(100)
-    text('Anime Stats for an Otaku', 350, 350)
-    fill('#fddb18')
+    text('Anime Stats for an Otaku', 650, 350)
+    fill('#f5dbc4')
     textSize(50)
-    text('Get Stats about: ', 450, 650)
+    text('Get Stats about: ', 1100, 650)
 
-    movie = check_box(900, 620, movie)
-    tv = check_box(1050, 620, tv)
+    movie = check_box(1500, 620, movie)
+    tv = check_box(1650, 620, tv)
     textSize(30)
-    text('Movies', 900+32, 620+22)
-    text('TV Shows', 1050+32, 620+22)
+    text('Movies', 1500+32, 620+22)
+    text('TV Shows', 1650+32, 620+22)
 
-    fill('#959595')
-    text('Anime Dataset Visualisation: A Project for CS7DS4 - DATA VISUALISATION', 400, 1000)
-    text('By: Mukesh Arambakam - 19301497', 650, 1050)
+    fill('#ced0dc')
+    text('Anime Dataset Visualisation: A Project for CS7DS4 - DATA VISUALISATION', 800, 1000)
+    text('By: Mukesh Arambakam - 19301497', 1300, 1050)
 
 def screen(type):
     global movie, tv, pie, bar, comp, bubble, box_plt, nx, show_mem, bar_zoom
