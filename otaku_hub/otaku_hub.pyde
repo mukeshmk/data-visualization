@@ -27,7 +27,11 @@ bar_zoom = False
 comp_list = set()
 nw_plt = None
 
+img = None
+
 def setup():
+    global img
+    img = loadImage("hisoka.jpg")
     fullScreen()
 
 def draw_network_node(x, y, r, a, c, v):
@@ -294,14 +298,16 @@ def back_button(val):
 
 def selection_screen():
     global movie, tv
+    background('#4f247d')
+    image(img, width/2-150, height/2-90)
 
-    fill('#a100e6')
+    fill('#67ae9c')
     textSize(150)
     text('OtakuHub', 550, 200)
-    fill('#ba1aff')
+    fill('#ff666b')
     textSize(100)
     text('Anime Stats for an Otaku', 350, 350)
-    fill('#ca4dff')
+    fill('#fddb18')
     textSize(50)
     text('Get Stats about: ', 450, 650)
 
@@ -311,7 +317,7 @@ def selection_screen():
     text('Movies', 900+32, 620+22)
     text('TV Shows', 1050+32, 620+22)
 
-    fill('#590080')
+    fill('#959595')
     text('Anime Dataset Visualisation: A Project for CS7DS4 - DATA VISUALISATION', 400, 1000)
     text('By: Mukesh Arambakam - 19301497', 650, 1050)
 
